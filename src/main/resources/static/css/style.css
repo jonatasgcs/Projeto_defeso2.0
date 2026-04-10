@@ -1,0 +1,383 @@
+:root {
+    --navy: #001e3c;
+    --navy-dark: #001529;
+    --info-blue: #0d0df0;
+}
+
+body { font-family: 'Inter', sans-serif; color: #334155; scroll-behavior: smooth; overflow-x: hidden; }
+
+/* Navbar e Header */
+.bg-navy { background-color: var(--navy); }
+.nav-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--info-blue); object-fit: cover; }
+.hero-bg { background: linear-gradient(135deg, #001e3c 0%, #004e92 50%, #00b4db 100%); min-height: 580px; }
+.wave-container { position: absolute; bottom: -1px; left: 0; width: 100%; overflow: hidden; line-height: 0; }
+.wave-container svg { width: 100vw; height: 60px; }
+
+/* Composição Imagens Hero */
+.image-composition { position: relative; height: 400px; }
+.blob-shape { position: absolute; border: 6px solid rgba(255, 255, 255, 0.2); background-position: center; background-size: cover; }
+.blob-1 { width: 250px; height: 300px; left: 10%; z-index: 3; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation: float1 8s infinite ease-in-out; }
+.blob-2 { width: 160px; height: 160px; top: -20px; right: 10%; z-index: 2; border-radius: 50%; animation: float2 6s infinite ease-in-out; }
+.blob-3 { width: 140px; height: 140px; bottom: 30px; right: 15%; z-index: 4; border-radius: 40% 60% 50% 50%; animation: float2 7s infinite reverse; }
+@keyframes float1 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+@keyframes float2 { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(15px, 10px); } }
+.ocean-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; height: 350px; background: radial-gradient(circle, rgba(13, 202, 240, 0.2) 0%, transparent 70%); }
+
+/* Pilar Educativo */
+.education-card {
+    border-radius: 20px !important;
+    transition: all 0.4s ease;
+    background: #fff;
+    border: 2px solid transparent !important;
+}
+.border-info-soft { border-color: rgba(13, 202, 240, 0.15) !important; }
+.border-primary-soft { border-color: rgba(13, 110, 253, 0.15) !important; }
+.border-success-soft { border-color: rgba(25, 135, 84, 0.15) !important; }
+.shadow-hover { box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+.education-card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0,30,60,0.12) !important; border-color: var(--info-blue) !important; }
+.icon-circle { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin: 0 auto; }
+.divider-center { width: 50px; height: 4px; border-radius: 2px; }
+
+/* Notícias - ADICIONADO SOMBRA NAS BORDAS */
+.news-thumb { width: 120px; min-width: 120px; background-position: center; background-size: cover; background-color: #eee; }
+.news-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05); /* Borda leve */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important; /* Sombra mais visível */
+}
+.news-item:hover {
+    transform: translateX(10px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* Contato - CORREÇÃO DEFINITIVA DO FUNDO BRANCO */
+.contact-card { background: linear-gradient(145deg, #001e3c, #003366); }
+
+.custom-input {
+    background-color: rgba(0, 21, 41, 0.6) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: white !important;
+}
+
+/* Remove fundo branco do label */
+.form-floating > .custom-input:focus ~ label,
+.form-floating > .custom-input:not(:placeholder-shown) ~ label {
+    background-color: transparent !important;
+    color: var(--info-blue) !important;
+    opacity: 1;
+}
+
+/* Bloqueia fundo branco ao digitar e autocompletar do navegador */
+.custom-input:focus,
+.custom-input:not(:placeholder-shown),
+.custom-input:-webkit-autofill {
+    background-color: rgba(0, 21, 41, 0.9) !important;
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0px 1000px #001e3c inset !important; /* Força a cor marinha */
+    border-color: var(--info-blue) !important;
+}
+
+.form-floating > label { color: rgba(255,255,255,0.5); transition: all 0.2s ease; }
+.custom-input:focus { box-shadow: none !important; }
+
+
+/* Efeito de linha embaixo dos links */
+.hover-anchor {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.hover-anchor::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 5px;
+    left: 50%;
+    background-color: var(--info-blue);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.hover-anchor:hover::after {
+    width: 70%;
+}
+
+.hover-anchor:hover {
+    color: var(--info-blue) !important;
+}
+
+/* Animação suave nos botões */
+.btn-animate {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.btn-animate:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(13, 202, 240, 0.4) !important;
+}
+
+/* Detalhes do Avatar */
+.avatar-wrapper {
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.avatar-wrapper:hover {
+    transform: rotate(5deg) scale(1.1);
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    background-color: #2ecc71; /* Verde online */
+    border: 2px solid var(--navy);
+    border-radius: 50%;
+    animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(46, 204, 113, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+
+/* Ícones balançando levemente ao passar o mouse */
+.nav-link:hover i {
+    animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+
+:root {
+    --navy: #001e3c;
+    --navy-dark: #001529;
+    --info-blue: #0dcaf0;
+}
+
+/* Reset básico para evitar bloqueios de seleção */
+body {
+    font-family: 'Inter', sans-serif;
+    color: #334155;
+    scroll-behavior: smooth;
+    position: relative;
+    -webkit-user-select: text; /* Garante que o texto seja selecionável */
+    user-select: text;
+}
+
+/* Navbar */
+.bg-navy { background-color: var(--navy); }
+.nav-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--info-blue); object-fit: cover; }
+
+/* Container que envolve a foto e o ponto */
+.avatar-wrapper {
+    position: relative;
+    display: inline-block; /* Mantém o tamanho exato da imagem */
+    vertical-align: middle;
+}
+
+/* O ponto verde menor e na posição correta */
+.status-indicator {
+    position: absolute;
+    bottom: 1px; /* Ajuste fino para não sair do círculo */
+    right: 1px;  /* Ajuste fino para não sair do círculo */
+    width: 8px;  /* Tamanho reduzido */
+    height: 8px; /* Tamanho reduzido */
+    background-color: #22c55e;
+    border-radius: 50%;
+    border: 1px solid var(--navy); /* Borda fina para contraste */
+}
+
+.nav-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid var(--info-blue);
+    object-fit: cover;
+}
+
+
+/* Header e Hero */
+.hero-bg {
+    background: linear-gradient(135deg, #001e3c 0%, #004e92 50%, #00b4db 100%);
+    min-height: 580px;
+    position: relative;
+    z-index: 1; /* Define uma base de profundidade */
+}
+
+/* Garante que o conteúdo do texto no Hero fique ACIMA de qualquer efeito */
+.z-index-2 { position: relative; z-index: 10 !important; }
+
+.wave-container { position: absolute; bottom: -1px; left: 0; width: 100%; overflow: hidden; line-height: 0; z-index: 5; }
+.wave-container svg { width: 100vw; height: 60px; }
+
+/* Composição Imagens Hero - AJUSTADO PARA NÃO BLOQUEAR CLIQUE */
+.image-composition {
+    position: relative;
+    height: 400px;
+    pointer-events: none; /* Isso impede que essa div "bloqueie" o mouse */
+}
+.blob-shape {
+    position: absolute;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    background-position: center;
+    background-size: cover;
+    pointer-events: auto; /* Devolve o clique apenas para as imagens */
+}
+.blob-1 { width: 250px; height: 300px; left: 10%; z-index: 3; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation: float1 8s infinite ease-in-out; }
+.blob-2 { width: 160px; height: 160px; top: -20px; right: 10%; z-index: 2; border-radius: 50%; animation: float2 6s infinite ease-in-out; }
+.blob-3 { width: 140px; height: 140px; bottom: 30px; right: 15%; z-index: 4; border-radius: 40% 60% 50% 50%; animation: float2 7s infinite reverse; }
+
+@keyframes float1 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+@keyframes float2 { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(15px, 10px); } }
+
+.ocean-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(13, 202, 240, 0.2) 0%, transparent 70%);
+    z-index: 1;
+    pointer-events: none; /* Brilho não pode bloquear clique */
+}
+
+/* Pilar Educativo */
+.education-card {
+    border-radius: 20px !important;
+    transition: all 0.4s ease;
+    background: #fff;
+    border: 2px solid transparent !important;
+    z-index: 5;
+}
+.border-info-soft { border-color: rgba(13, 202, 240, 0.15) !important; }
+.border-primary-soft { border-color: rgba(13, 110, 253, 0.15) !important; }
+.border-success-soft { border-color: rgba(25, 135, 84, 0.15) !important; }
+.shadow-hover { box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+.education-card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0,30,60,0.12) !important; border-color: var(--info-blue) !important; }
+
+/* Notícias */
+.news-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+    position: relative;
+    z-index: 5;
+}
+.news-item:hover { transform: translateX(10px); box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important; }
+
+/* Contato - Correções de input mantidas */
+.contact-card .btn-info {
+    background-color: #00d2ff !important; /* Cor vibrante */
+    border: none !important;
+    color: #001e3c !important; /* Texto escuro para melhor leitura */
+    font-weight: 700 !important;
+    transition: all 0.3s ease !important;
+}
+
+.contact-card .btn-info:hover {
+    background-color: #ffffff !important; /* Fica branco ao passar o mouse */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4) !important;
+}
+.form-floating > .custom-input:focus ~ label,
+.form-floating > .custom-input:not(:placeholder-shown) ~ label {
+    background-color: transparent !important;
+    color: var(--info-blue) !important;
+}
+.custom-input:focus, .custom-input:-webkit-autofill {
+    background-color: rgba(0, 21, 41, 0.9) !important;
+    -webkit-box-shadow: 0 0 0px 1000px #001e3c inset !important;
+    color: rgb(39, 18, 102) !important;
+}
+
+
+/* Estilo dos campos sem o erro do balão branco */
+.custom-input {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    padding: 12px 15px !important;
+    border-radius: 10px !important;
+}
+
+/* Efeito de seleção (Foco) */
+.custom-input:focus {
+    background-color: rgba(255, 255, 255, 0.12) !important; /* Fundo brilha levemente */
+    border-color: var(--info-blue) !important;            /* Borda fica azul */
+    box-shadow: 0 0 12px rgba(35, 8, 155, 0.4) !important; /* Brilho azul suave ao redor */
+    color: #ffffff !important;
+    outline: none !important;                               /* Remove a borda padrão do navegador */
+}
+
+/* Faz o label mudar de cor quando o campo abaixo dele for selecionado */
+.mb-3:focus-within label, .mb-4:focus-within label {
+    color: var(--info-blue) !important;
+    transition: color 0.3s ease;
+}
+
+/* Cor do texto que fica fixo acima do balão */
+.text-white-50 {
+    color: rgba(255, 255, 255, 0.6) !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+
+
+
+/* Efeito de elevação para cards de notícias */
+.news-card {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease !important;
+}
+
+.news-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 30, 60, 0.2) !important;
+}
+
+/* Garante que o texto dentro do card seja legível */
+.news-card .card-body h5 {
+    font-size: 1.15rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+.news-card .card-body p {
+    font-size: 0.9rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Forçar o corpo do site a ter um preenchimento fixo e elegante */
+body {
+    padding-left: 5vw !important;
+    padding-right: 5vw !important;
+    width: 100vw !important;
+}
+
+/* Ajuste da Navbar para acompanhar o corpo */
+.navbar .container, .navbar .container-fluid {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* Limitar a expansão em monitores Ultra-Wide (opcional) */
+@media (min-width: 2000px) {
+    body {
+        padding-left: 15vw !important;
+        padding-right: 15vw !important;
+    }
+}

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educação Ambiental | ECOSIS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        /* Adicione isso dentro do seu <style> existente */
+.container-fluid {
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+}
+
+/* Garante que em telas pequenas o menu não fique espremido */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+        :root { --navy: #001a33; --info-blue: #0dcaf0; }
+        .bg-navy { background-color: var(--navy); }
+        .text-navy { color: var(--navy); }
+        .nav-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--info-blue); object-fit: cover; }
+        .avatar-wrapper { position: relative; display: inline-block; vertical-align: middle; }
+        .status-indicator { position: absolute; bottom: 1px; right: 1px; width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; border: 1px solid var(--navy); }
+
+        .edu-hero {
+            background: linear-gradient(135deg, var(--navy) 0%, #004e92 100%);
+            padding: 100px 0 160px;
+            color: white;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+        }
+        .main-content { margin-top: -80px; position: relative; z-index: 10; }
+        .info-card { border: none; border-radius: 20px; transition: all 0.3s ease; background: white; border-bottom: 4px solid transparent; height: 100%; }
+        .info-card:hover { transform: translateY(-10px); border-bottom-color: var(--info-blue); box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; }
+        .content-section { background: #ffffff; border-radius: 30px; border: 1px solid #e2e8f0; padding: 40px; margin-bottom: 40px; }
+        .quiz-wrapper { background: var(--navy); color: white; border-radius: 25px; padding: 40px; margin-bottom: 40px; }
+        .btn-quiz { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; transition: 0.3s; width: 100%; text-align: left; padding: 15px 20px; border-radius: 12px; margin-bottom: 10px; }
+        .btn-quiz:hover { background: var(--info-blue); border-color: var(--info-blue); }
+        .research-card { background: #ffffff; border-radius: 30px; border: 1px solid #e2e8f0; box-shadow: 0 20px 40px rgba(0, 30, 60, 0.1); margin-bottom: 40px; }
+        .custom-input-light { background-color: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: var(--navy) !important; border-radius: 12px !important; padding: 12px !important; }
+        .btn-animate { transition: all 0.3s ease; }
+        .btn-animate:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+
+
+        /* CORREÇÃO FINAL - NÃO MEXER */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.hero-bg {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+header.hero-bg {
+    left: 0 !important;
+    right: 0 !important;
+}
+
+        /* Aumenta o recuo lateral do conteúdo */
+.navbar-padding, .container-fluid {
+    padding-left: 6% !important;
+    padding-right: 6% !important;
+}
+
+/* Garante que as linhas (rows) não "comam" o padding do container */
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Ajuste específico para dispositivos móveis para não ficar apertado demais */
+@media (max-width: 768px) {
+    .navbar-padding, .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+
+
+    </style>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-navy sticky-top shadow">
+    <div class="container-fluid" style="padding: 0 5% !important;">
+        <a class="navbar-brand fw-bold" th:href="@{/}"><i class="fas fa-water me-2 text-info"></i>ECOSIS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/regras}"><i class="fas fa-gavel me-1"></i> Regras</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/direitos}"><i class="fas fa-balance-scale me-1"></i> Direitos</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/noticias}"><i class="fas fa-newspaper me-1"></i> Notícias</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor active" th:href="@{/educacao}"><i class="fas fa-graduation-cap me-1"></i> Educação</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/contato}"><i class="fas fa-envelope me-1"></i> Contato</a></li>
+
+                <li th:if="${session.usuario_id == null}" class="ms-lg-3">
+                    <a class="btn btn-sm btn-outline-info px-3 btn-animate" th:href="@{/autenticacao}">
+                        <i class="fas fa-sign-in-alt me-1"></i> Entrar
+                    </a>
+                </li>
+                <li th:if="${session.usuario_id == null}" class="ms-lg-2">
+                    <a class="btn btn-sm btn-info text-white px-3 shadow-sm btn-animate" th:href="@{/autenticacao}">
+                        <i class="fas fa-user-plus me-1"></i> Criar Conta
+                    </a>
+                </li>
+
+                <li th:if="${session.usuario_id != null}" class="ms-lg-3 profile-dropdown">
+                    <a th:href="@{/perfil}" class="d-flex align-items-center text-decoration-none">
+                        <div class="avatar-wrapper">
+                            <img th:src="@{'/img/' + ${session.usuario_foto}}" class="nav-avatar" alt="Perfil">
+                            <div class="status-indicator"></div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="edu-hero text-center">
+    <div class="container" data-aos="fade-up">
+        <h1 class="display-4 fw-bold mb-3">Educação Ambiental</h1>
+        <p class="lead opacity-75">Garantindo a preservação do mar e o futuro da pesca artesanal.</p>
+    </div>
+</header>
+
+<main class="container mb-5 main-content">
+
+    <div class="row g-4 mb-5 text-center">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="info-card p-4 shadow-sm">
+                <i class="fas fa-seedling fa-3x text-success mb-3"></i>
+                <h5 class="fw-bold text-navy">Preservação</h5>
+                <p class="text-muted small">Respeitar o ciclo da natureza é o que garante o peixe na rede amanhã.</p>
+            </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-card p-4 shadow-sm">
+                <i class="fas fa-microscope fa-3x text-info mb-3"></i>
+                <h5 class="fw-bold text-navy">Pesquisa Local</h5>
+                <p class="text-muted small">Coletamos dados para fortalecer a voz da comunidade pesqueira.</p>
+            </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="info-card p-4 shadow-sm">
+                <i class="fas fa-anchor fa-3x text-primary mb-3"></i>
+                <h5 class="fw-bold text-navy">Pesca Consciente</h5>
+                <p class="text-muted small">Boas práticas que reduzem a poluição e mantêm o equilíbrio do mar.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section" data-aos="fade-up">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h3 class="fw-bold text-navy mb-4"><i class="fas fa-shield-halved text-info me-2"></i>Entendendo o Período de Defeso</h3>
+                <p>O <strong>Defeso</strong> é a paralisação temporária da pesca para a preservação das espécies. Este período é estabelecido de acordo com o ciclo reprodutor de cada animal.</p>
+                <p>Respeitar o defeso garante que os estoques se recuperem, permitindo que a pesca continue sendo uma atividade sustentável.</p>
+            </div>
+            <div class="col-lg-5">
+                <div class="bg-light p-4 rounded-4 border-start border-info border-4">
+                    <h6 class="fw-bold text-navy">Espécies Protegidas Comuns:</h6>
+                    <ul class="small text-muted mb-0">
+                        <li>Camarão Rosa e Sete-barbas</li>
+                        <li>Lagosta (Vermelha e Cabo Verde)</li>
+                        <li>Caranguejo-Uçá (Período da 'Andada')</li>
+                        <li>Sardinha Verdadeira</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-wrapper text-center" data-aos="zoom-in">
+        <span class="badge bg-info mb-3">QUIZ INTERATIVO</span>
+        <h3 class="fw-bold mb-4">Teste seus conhecimentos ambientais</h3>
+        <div id="quiz-box" class="row justify-content-center">
+            <div class="col-md-8 text-start">
+                <p class="lead text-center mb-4">Qual o principal objetivo de existir o Seguro-Defeso?</p>
+                <button class="btn-quiz" onclick="checkQuiz(false)">Compensar o pescador por não haver peixes.</button>
+                <button class="btn-quiz" onclick="checkQuiz(true)">Garantir renda enquanto ajuda na preservação das espécies.</button>
+                <button class="btn-quiz" onclick="checkQuiz(false)">Substituir a aposentadoria.</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="research-card p-4 p-md-5" data-aos="fade-up">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-navy">Pesquisa Socioprofissional</h2>
+            <p class="text-muted">Participe enviando dados que ajudam no desenvolvimento de novas políticas.</p>
+        </div>
+
+        <form th:if="${session.usuario_id != null}" th:action="@{/educacao/pesquisa}" method="POST" class="row g-4 text-start">
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-navy">Tipo de Embarcação</label>
+                <input type="text" name="tipoEmbarcacao" class="form-control custom-input-light" placeholder="Ex: Canoa, Bote, Traineira" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-navy">Frequência de Pesca</label>
+                <select name="frequenciaPesca" class="form-select custom-input-light" required>
+                    <option value="Diariamente">Diariamente</option>
+                    <option value="Semanalmente">Semanalmente</option>
+                    <option value="Mensalmente">Mensalmente</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-navy">Usará o benefício futuramente?</label>
+                <select name="usoBeneficio" class="form-select custom-input-light">
+                    <option value="Sim">Sim</option>
+                    <option value="Nao">Não</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-navy">Satisfação com a Profissão</label>
+                <select name="satisfacaoProfissao" class="form-select custom-input-light">
+                    <option value="Sim">Estou Satisfeito</option>
+                    <option value="Nao">Não estou satisfeito</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-bold text-navy">Material e Espécies que Captura</label>
+                <textarea name="materialUtilizado" class="form-control custom-input-light" rows="3" placeholder="Quais redes utiliza e quais peixes costuma pescar?"></textarea>
+            </div>
+            <div class="col-12 text-center mt-4">
+                <button type="submit" class="btn btn-info px-5 py-3 text-white fw-bold rounded-pill shadow btn-animate">
+                    <i class="fas fa-save me-2"></i>Enviar Pesquisa
+                </button>
+            </div>
+        </form>
+
+        <div th:unless="${session.usuario_id != null}" class="text-center py-5">
+            <i class="fas fa-lock fa-3x text-muted mb-3 opacity-25"></i>
+            <h4 class="fw-bold text-navy">Login Obrigatório</h4>
+            <p>Faça login para participar da nossa coleta de dados.</p>
+            <a th:href="@{/autenticacao}" class="btn bg-navy text-white rounded-pill px-4 mt-2">Fazer Login</a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4" data-aos="fade-up">
+        <div class="col-12 text-center mb-2">
+            <h4 class="fw-bold text-navy">Glossário do Pescador</h4>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 bg-white shadow-sm rounded-3 border-start border-info border-3 h-100">
+                <strong class="text-navy">Sustentabilidade:</strong> <span class="small text-muted">Usar recursos naturais sem esgotá-los.</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 bg-white shadow-sm rounded-3 border-start border-info border-3 h-100">
+                <strong class="text-navy">Estuário:</strong> <span class="small text-muted">Transição onde o rio encontra o mar.</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 bg-white shadow-sm rounded-3 border-start border-info border-3 h-100">
+                <strong class="text-navy">Ecossistema:</strong> <span class="small text-muted">Conjunto de seres vivos e o meio ambiente.</span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-navy py-4 text-white-50 border-top border-secondary text-center mt-auto">
+    <p class="mb-0 small">© 2026 ECOSIS - Sustentabilidade Marinha | Jonatas Gabriel</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('status') === 'sucesso') {
+        Swal.fire({
+            title: 'Pesquisa Enviada!',
+            text: 'Obrigado por contribuir com a preservação do mar!',
+            icon: 'success',
+            confirmButtonColor: '#0dcaf0'
+        });
+    }
+
+    function checkQuiz(correct) {
+        const box = document.getElementById('quiz-box');
+        if(correct) {
+            box.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fas fa-trophy fa-4x text-warning mb-3"></i>
+                    <h4 class="fw-bold text-white">Parabéns! Você acertou!</h4>
+                    <p>O Seguro-Defeso é fundamental para a preservação.</p>
+                    <button class="btn btn-outline-info btn-sm mt-3" onclick="location.reload()">Refazer Quiz</button>
+                </div>`;
+        } else {
+            Swal.fire('Tente novamente!', 'O foco é a preservação do estoque pesqueiro.', 'error');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECOSIS | Projeto Defeso</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+
+        /* Adicione isso dentro do seu <style> */
+.container-fluid {
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+}
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+        /* Efeito de Bolhas de Sabão Intensificado */
+        .soap-bubbles-area {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 45%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .soap-bubble {
+            position: absolute;
+            bottom: -150px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            box-shadow: inset -10px -10px 15px rgba(255, 255, 255, 0.2),
+                        inset 10px 10px 15px rgba(255, 255, 255, 0.1),
+                        0 0 20px rgba(255, 255, 255, 0.1);
+            animation: float-bubbles 12s infinite linear;
+        }
+
+        .soap-bubble::after {
+            content: "";
+            position: absolute;
+            top: 15%; left: 15%; width: 25%; height: 25%;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%; filter: blur(2px);
+        }
+
+        @keyframes float-bubbles {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            50% { transform: translateY(-500px) translateX(50px); }
+            100% { transform: translateY(-1100px) translateX(-50px); opacity: 0; }
+        }
+
+        /* AJUSTE DE CONTRASTE NOS BALÕES (STAT-CARD) */
+        .floating-stats {
+            margin-top: -15px;
+            position: relative;
+            z-index: 10;
+        }
+        .stat-card {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        .stat-icon {
+            width: 38px; height: 38px; background: #00b4d8;
+            color: white; border-radius: 10px; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 1rem; margin-bottom: 12px;
+        }
+        .stat-card h6 { font-size: 0.95rem; font-weight: 700; color: #03045e; margin-bottom: 5px; }
+        .stat-card p { font-size: 0.8rem; line-height: 1.4; margin: 0; color: #4a5568; }
+
+        /* CORREÇÃO FINAL - NÃO MEXER */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.hero-bg {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+header.hero-bg {
+    left: 0 !important;
+    right: 0 !important;
+}
+/* Aumenta o recuo lateral do conteúdo */
+.navbar-padding, .container-fluid {
+    padding-left: 6% !important;
+    padding-right: 6% !important;
+}
+
+/* Garante que as linhas (rows) não "comam" o padding do container */
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Ajuste específico para dispositivos móveis para não ficar apertado demais */
+@media (max-width: 768px) {
+    .navbar-padding, .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-navy sticky-top shadow">
+    <div class="container-fluid" style="padding: 0 5% !important;">
+        <a class="navbar-brand fw-bold" th:href="@{/}">
+            <i class="fas fa-water me-2 text-info"></i>ECOSIS
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/regras}"><i class="fas fa-gavel me-1"></i> Regras</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/direitos}"><i class="fas fa-balance-scale me-1"></i> Direitos</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/noticias}"><i class="fas fa-newspaper me-1"></i> Notícias</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/educacao}"><i class="fas fa-graduation-cap me-1"></i> Educação</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/contato}"><i class="fas fa-envelope me-1"></i> Contato</a></li>
+
+                <li th:if="${session.usuario_id != null}" class="ms-lg-3 profile-dropdown">
+                    <a th:href="@{/perfil}" class="d-flex align-items-center text-decoration-none">
+                        <div class="avatar-wrapper">
+                            <img th:src="@{'/img/' + ${session.usuario_foto != null ? session.usuario_foto : 'avatar.png'}}" class="nav-avatar" alt="Perfil">
+                            <div class="status-indicator"></div>
+                        </div>
+                    </a>
+                </li>
+
+                <li th:if="${session.usuario_id == null}" class="ms-lg-3">
+                    <a class="btn btn-sm btn-outline-info px-3 btn-animate" th:href="@{/autenticacao}">
+                        <i class="fas fa-sign-in-alt me-1"></i> Entrar
+                    </a>
+                </li>
+                <li th:if="${session.usuario_id == null}" class="ms-lg-2">
+                    <a class="btn btn-sm btn-info text-white px-3 shadow-sm btn-animate" th:href="@{/autenticacao}">
+                        <i class="fas fa-user-plus me-1"></i> Criar Conta
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="hero-bg text-white position-relative overflow-hidden">
+    <div class="soap-bubbles-area">
+        <div class="soap-bubble" style="width: 40px; height: 40px; left: 5%; animation-duration: 9s; animation-delay: 0s;"></div>
+        <div class="soap-bubble" style="width: 20px; height: 20px; left: 15%; animation-duration: 7s; animation-delay: 2s;"></div>
+        <div class="soap-bubble" style="width: 50px; height: 50px; left: 25%; animation-duration: 11s; animation-delay: 1s;"></div>
+        <div class="soap-bubble" style="width: 30px; height: 30px; left: 35%; animation-duration: 8s; animation-delay: 4s;"></div>
+        <div class="soap-bubble" style="width: 70px; height: 70px; left: 45%; animation-duration: 14s; animation-delay: 0s;"></div>
+        <div class="soap-bubble" style="width: 25px; height: 25px; left: 55%; animation-duration: 6s; animation-delay: 3s;"></div>
+        <div class="soap-bubble" style="width: 45px; height: 45px; left: 65%; animation-duration: 10s; animation-delay: 5s;"></div>
+        <div class="soap-bubble" style="width: 35px; height: 35px; left: 75%; animation-duration: 9s; animation-delay: 1.5s;"></div>
+        <div class="soap-bubble" style="width: 60px; height: 60px; left: 85%; animation-duration: 13s; animation-delay: 2.5s;"></div>
+        <div class="soap-bubble" style="width: 20px; height: 20px; left: 92%; animation-duration: 7s; animation-delay: 0.5s;"></div>
+    </div>
+
+    <div class="container-fluid px-4">
+        <div class="row align-items-center py-5">
+            <div class="col-lg-6 py-5" data-aos="fade-right" data-aos-duration="1000">
+                <span class="badge bg-info mb-3 px-3 py-2 text-uppercase fw-bold shadow-sm">Sustentabilidade Marinha</span>
+                <h1 class="fw-bold display-4 mb-3">Proteção e Consciência no Período de Defeso</h1>
+                <p class="lead opacity-90 mb-4">Entenda as leis ambientais, consulte seus direitos e proteja a vida marinha.</p>
+                <div class="d-flex gap-2">
+                    <a th:href="@{/direitos}" class="btn btn-info btn-lg text-white shadow-lg px-4 fw-bold">Simular Direitos</a>
+                    <a href="#info-rapida" class="btn btn-outline-light btn-lg px-4">Saiba Mais</a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block"></div>
+        </div>
+    </div>
+    <div class="wave-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+            <path fill="#ffffff" d="M0,32L60,42.7C120,53,240,75,360,80C480,85,600,75,720,58.7C840,43,960,21,1080,16C1200,11,1320,21,1380,26.7L1440,32L1440,120L0,120Z"></path>
+        </svg>
+    </div>
+</header>
+
+<section id="info-rapida" class="container floating-stats">
+    <div class="row g-3 justify-content-center">
+        <div class="col-md-4 col-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-card text-center">
+                <div class="stat-icon mx-auto"><i class="fas fa-calendar-alt"></i></div>
+                <h6>Defeso Ativo 2026</h6>
+                <p class="text-muted">Camarão Rosa (Sudeste) até 31/05/2026.</p>
+            </div>
+        </div>
+        <div class="col-md-4 col-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-card text-center">
+                <div class="stat-icon mx-auto" style="background: #22c55e;"><i class="fas fa-shield-alt"></i></div>
+                <h6>Seguro Defeso</h6>
+                <p class="text-muted">Solicitações abertas via Meu INSS.</p>
+            </div>
+        </div>
+        <div class="col-md-4 col-12" data-aos="fade-up" data-aos-delay="300">
+            <div class="stat-card text-center">
+                <div class="stat-icon mx-auto" style="background: #ef4444;"><i class="fas fa-phone"></i></div>
+                <h6>Linha Verde IBAMA</h6>
+                <p class="text-muted">Ligue <strong>0800 061 8080</strong></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="educacao" class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold text-navy">Pilar Educativo</h2>
+            <div class="divider-center bg-info mx-auto mb-3"></div>
+            <p class="text-muted">Conhecimento essencial para a preservação do nosso ecossistema.</p>
+        </div>
+        <div class="row g-4 text-center">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 education-card border-info-soft shadow-hover">
+                    <div class="card-body p-4">
+                        <div class="icon-circle bg-info-subtle text-info mb-3"><i class="fa-solid fa-fish-fins fa-2x"></i></div>
+                        <h5 class="fw-bold text-navy">Ciclos Naturais</h5>
+                        <p class="text-muted small">Respeito à época de reprodução das espécies marinhas para garantir a renovação da vida nos oceanos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 education-card border-primary-soft shadow-hover">
+                    <div class="card-body p-4">
+                        <div class="icon-circle bg-primary-subtle text-primary mb-3"><i class="fa-solid fa-scale-balanced fa-2x"></i></div>
+                        <h5 class="fw-bold text-navy">Leis Ambientais</h5>
+                        <p class="text-muted small">Normativas do IBAMA e órgãos federais centralizadas para facilitar a consulta legal de pescadores e cidadãos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 education-card border-success-soft shadow-hover">
+                    <div class="card-body p-4">
+                        <div class="icon-circle bg-success-subtle text-success mb-3"><i class="fa-solid fa-hand-holding-heart fa-2x"></i></div>
+                        <h5 class="fw-bold text-navy">Impacto Social</h5>
+                        <p class="text-muted small">Orientação clara sobre o Seguro-Defeso, protegendo a renda das comunidades artesanais durante a proibição.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container-fluid">
+        <div class="row g-5">
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h4 class="fw-bold m-0 border-start border-info border-4 ps-3 text-navy">Últimas Notícias</h4>
+                    <a th:href="@{/noticias}" class="btn btn-sm btn-outline-info rounded-pill px-3">Ver Todas</a>
+                </div>
+                <div class="news-grid">
+                    <article class="news-item shadow-sm bg-white rounded-4 overflow-hidden mb-4 d-flex">
+                        <div class="news-thumb" style="background-image: url('https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=300');"></div>
+                        <div class="p-4 flex-grow-1">
+                            <span class="badge bg-info-subtle text-info small mb-2">Defeso</span>
+                            <h5 class="fw-bold mb-2">Prorrogação da proibição da pesca no Sudeste</h5>
+                            <p class="text-muted small mb-3">Novas diretrizes visam proteger o repovoamento das espécies locais.</p>
+                            <a th:href="@{/informacoes}" class="text-info fw-bold text-decoration-none small stretched-link">Ler mais <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </article>
+                    <article class="news-item shadow-sm bg-white rounded-4 overflow-hidden d-flex">
+                        <div class="news-thumb" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=300');"></div>
+                        <div class="p-4 flex-grow-1">
+                            <span class="badge bg-success-subtle text-success small mb-2">Ambiental</span>
+                            <h5 class="fw-bold mb-2">Crescimento da biodiversidade marinha</h5>
+                            <p class="text-muted small mb-3">Dados indicam aumento da biomassa em áreas de proteção integral.</p>
+                            <a th:href="@{/informacoes}" class="text-info fw-bold text-decoration-none small stretched-link">Ler mais <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div class="col-lg-5" id="contato" data-aos="fade-left">
+                <div class="contact-card p-4 p-xl-5 rounded-5 shadow-lg border-0 position-relative">
+                    <h4 class="fw-bold text-white mb-2">Fale Conosco</h4>
+                    <p class="text-white-50 small mb-4">Envie sua mensagem para nossa equipe.</p>
+
+                    <form th:action="@{/processa_contato}" method="POST">
+                        <div class="mb-3 text-start">
+                            <label class="form-label small fw-bold text-white-50 ms-2">Nome Completo</label>
+                            <input type="text" class="form-control custom-input"
+                                   th:value="${session.usuario_nome}" readonly>
+                        </div>
+
+                        <div class="mb-3 text-start">
+                            <label class="form-label small fw-bold text-white-50 ms-2">E-mail</label>
+                            <input type="email" class="form-control custom-input"
+                                   th:value="${session.usuario_email}" readonly>
+                        </div>
+
+                        <div class="mb-4 text-start">
+                            <label class="form-label small fw-bold text-white-50 ms-2">Sua Mensagem</label>
+                            <textarea name="mensagem" class="form-control custom-input" style="height: 100px" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-info w-100 py-3 text-white fw-bold rounded-pill btn-animate">
+                            <i class="fas fa-paper-plane me-2"></i>Enviar Mensagem
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-navy py-4 text-white-50 border-top border-secondary text-center">
+    <p class="mb-0 small">© 2026 ECOSIS - Sustentabilidade Marinha | Jonatas Gabriel</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ once: true });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('status') === 'sucesso') {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        alert('✅ Mensagem enviada com sucesso! Obrigado pelo seu contato.');
+    }
+
+    if (urlParams.get('erro') === 'login') {
+         alert('❌ Você precisa estar logado para enviar uma mensagem.');
+    }
+</script>
+</body>
+</html>

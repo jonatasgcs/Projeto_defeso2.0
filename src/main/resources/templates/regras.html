@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regras do Defeso | ECOSIS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        /* 1. CORREÇÃO DE ESTRUTURA E SCROLL */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important; /* Mata a barra branca lateral */
+            position: relative;
+        }
+
+        /* Padding lateral padronizado para alinhar com a Navbar */
+        .container-fluid, .main-content-rules {
+            padding-left: 6% !important;
+            padding-right: 6% !important;
+        }
+
+        /* Evita que as linhas do Bootstrap criem scroll horizontal */
+        .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* 2. ESTILOS DA PÁGINA DE REGRAS */
+        .rules-hero {
+            background: linear-gradient(135deg, #03045e 0%, #004e92 100%);
+            padding: 100px 0 140px;
+            color: white;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+            width: 100% !important;
+        }
+
+        .law-card { border-left: 5px solid #00b4d8; transition: all 0.3s; }
+
+        .penalty-box {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 15px;
+            position: sticky;
+            top: 100px;
+        }
+
+        /* Quiz */
+        #quiz-container { background: white; border-radius: 25px; border: 1px solid #e2e8f0; }
+        .quiz-option { cursor: pointer; transition: 0.2s; border: 2px solid #f1f5f9; background: #f8fafc; }
+        .quiz-option:hover { background-color: #f1f5f9; border-color: #00b4d8; transform: translateX(5px); }
+        .correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534; }
+        .incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
+
+        /* Avatar e Nav */
+        .nav-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #00b4d8; object-fit: cover; }
+        .avatar-wrapper { position: relative; display: inline-block; vertical-align: middle; }
+        .status-indicator { position: absolute; bottom: 1px; right: 1px; width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; border: 1px solid #03045e; }
+
+        @media (max-width: 768px) {
+            .container-fluid, .main-content-rules {
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-navy sticky-top shadow">
+    <div class="container-fluid" style="padding: 0 5% !important;">
+        <a class="navbar-brand fw-bold" th:href="@{/}"><i class="fas fa-water me-2 text-info"></i>ECOSIS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor active" th:href="@{/regras}"><i class="fas fa-gavel me-1"></i> Regras</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/direitos}"><i class="fas fa-balance-scale me-1"></i> Direitos</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/noticias}"><i class="fas fa-newspaper me-1"></i> Notícias</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/educacao}"><i class="fas fa-graduation-cap me-1"></i> Educação</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/contato}"><i class="fas fa-envelope me-1"></i> Contato</a></li>
+
+                <li th:if="${session.usuario_id != null}" class="ms-lg-3 profile-dropdown">
+                    <a th:href="@{/perfil}" class="d-flex align-items-center text-decoration-none">
+                        <div class="avatar-wrapper">
+                            <img th:src="@{'/img/' + ${session.usuario_foto != null ? session.usuario_foto : 'avatar.png'}}" class="nav-avatar" alt="Perfil">
+                            <div class="status-indicator"></div>
+                        </div>
+                    </a>
+                </li>
+                <li th:if="${session.usuario_id == null}" class="ms-lg-3">
+                    <a class="btn btn-sm btn-outline-info px-3 btn-animate" th:href="@{/autenticacao}"><i class="fas fa-sign-in-alt me-1"></i> Entrar</a>
+                </li>
+                <li th:if="${session.usuario_id == null}" class="ms-lg-2">
+                    <a class="btn btn-sm btn-info text-white px-3 shadow-sm btn-animate" th:href="@{/autenticacao}"><i class="fas fa-user-plus me-1"></i> Criar Conta</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="rules-hero text-center">
+    <div class="container-fluid" data-aos="fade-up">
+        <span class="badge bg-info mb-3 px-3 py-2 text-uppercase fw-bold shadow-sm">Legislação Ambiental 2026</span>
+        <h1 class="display-4 fw-bold mb-3">Normativas e Períodos de Defeso</h1>
+        <p class="lead opacity-90 mx-auto" style="max-width: 700px;">O defeso é a paralisação temporária da pesca para preservação das espécies. Conheça as datas e evite sanções legais.</p>
+    </div>
+</header>
+
+<main class="main-content-rules" style="margin-top: -60px;">
+    <div class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <div class="card shadow border-0 rounded-4 overflow-hidden mb-4" data-aos="fade-up">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="fw-bold text-navy mb-0"><i class="fas fa-shrimp me-2 text-info"></i>Defeso de Crustáceos e Moluscos</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                        <tr><th>Espécie</th><th>Período</th><th>Região</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>Camarão Rosa/Sete-barbas</td><td>01/Mar a 31/Mai</td><td>Sudeste e Sul</td></tr>
+                        <tr><td>Caranguejo-Uçá (Andada)</td><td>Jan, Fev e Março</td><td>Norte e Nordeste</td></tr>
+                        <tr><td>Lagostas</td><td>01/Nov a 30/Abril</td><td>Toda a Costa</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card shadow border-0 rounded-4 overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="fw-bold text-navy mb-0"><i class="fas fa-fish me-2 text-primary"></i>Piracema (Água Doce)</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                        <tr><th>Espécie</th><th>Período</th><th>Bacia Hidrográfica</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr><td>Dourado e Pintado</td><td>01/Nov a 28/Fev</td><td>Bacia do Rio Paraná</td></tr>
+                        <tr><td>Tambaqui</td><td>01/Out a 31/Mar</td><td>Bacia Amazônica</td></tr>
+                        <tr><td>Surubim</td><td>01/Nov a 30/Abr</td><td>Bacia do São Francisco</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="penalty-box p-4 shadow-sm" data-aos="fade-left">
+                <h5 class="text-danger fw-bold mb-3"><i class="fas fa-gavel me-2"></i>Sanções Administrativas</h5>
+                <p class="small text-muted">O descumprimento pode gerar:</p>
+                <ul class="list-unstyled small">
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="fas fa-caret-right text-danger me-2 mt-1"></i>
+                        <span>Multa de <strong>R$ 700,00 a R$ 100.000,00</strong>.</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="fas fa-caret-right text-danger me-2 mt-1"></i>
+                        <span>Apreensão do produto da pesca e barcos.</span>
+                    </li>
+                </ul>
+                <div class="alert alert-warning py-2 mb-0 small">
+                    <i class="fas fa-info-circle me-1"></i> Denuncie: <strong>0800-061-8080</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="quiz-section" class="py-5" data-aos="fade-up">
+        <div id="quiz-container" class="p-4 p-md-5 shadow">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-navy">Desafio do Conhecimento</h2>
+                <p class="text-muted">Responda corretamente e mostre que você é um especialista.</p>
+            </div>
+            <div id="question-box">
+                <h5 id="question-text" class="fw-bold mb-4 text-center"></h5>
+                <div id="options-box" class="d-grid gap-3" style="max-width: 600px; margin: 0 auto;"></div>
+            </div>
+            <div id="result-box" class="text-center d-none py-4">
+                <div class="display-3 text-warning mb-3"><i class="fas fa-certificate"></i></div>
+                <h3 class="fw-bold text-navy" id="result-title"></h3>
+                <p id="result-text" class="lead"></p>
+                <button class="btn btn-navy text-white rounded-pill px-5 py-2 mt-4" onclick="resetQuiz()">Recomeçar Quiz</button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-navy py-4 text-white-50 text-center">
+    <p class="mb-0 small">© 2026 ECOSIS - Sustentabilidade Marinha | Jonatas Gabriel</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
+    // Lógica do quiz mantida...
+    const questions = [
+        { q: "Qual o valor da multa mínima por pescar no defeso?", options: ["R$ 300,00", "R$ 700,00", "R$ 1.500,00"], correct: 1 },
+        { q: "Qual o período do defeso do Camarão Rosa no Sudeste?", options: ["Março a Maio", "Junho a Agosto", "Novembro a Janeiro"], correct: 0 },
+        { q: "A Piracema é o período de reprodução de quais peixes?", options: ["Peixes de água salgada", "Peixes de água doce", "Apenas crustáceos"], correct: 1 },
+        { q: "O que acontece com o barco apreendido em pesca ilegal?", options: ["É devolvido na hora", "É apenas multado", "Fica sob custódia do Estado"], correct: 2 }
+    ];
+    let currentQuestion = 0;
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        document.getElementById('question-text').innerText = q.q;
+        const optionsBox = document.getElementById('options-box');
+        optionsBox.innerHTML = '';
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'quiz-option p-3 rounded-4 fw-semibold text-center';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionsBox.appendChild(btn);
+        });
+    }
+    function checkAnswer(index, element) {
+        const correct = questions[currentQuestion].correct;
+        const options = document.querySelectorAll('.quiz-option');
+        options.forEach(opt => opt.style.pointerEvents = 'none');
+        if(index === correct) { element.classList.add('correct'); }
+        else { element.classList.add('incorrect'); options[correct].classList.add('correct'); }
+        setTimeout(() => {
+            currentQuestion++;
+            if(currentQuestion < questions.length) loadQuestion();
+            else showResult();
+        }, 1800);
+    }
+    function showResult() {
+        document.getElementById('question-box').classList.add('d-none');
+        document.getElementById('result-box').classList.remove('d-none');
+        document.getElementById('result-title').innerText = "Parabéns!";
+        document.getElementById('result-text').innerText = "Você demonstrou grande compromisso com a preservação ambiental.";
+    }
+    function resetQuiz() {
+        currentQuestion = 0;
+        document.getElementById('question-box').classList.remove('d-none');
+        document.getElementById('result-box').classList.add('d-none');
+        loadQuestion();
+    }
+    loadQuestion();
+</script>
+</body>
+</html>

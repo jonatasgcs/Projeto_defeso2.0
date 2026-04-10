@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Control Panel | ECOSIS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --navy-primary: #03045e; --ocean-accent: #00b4d8; --bg-canvas: #f8fafc; --text-main: #334155; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-canvas); color: var(--text-main); display: flex; margin: 0; }
+        .sidebar { width: 280px; background: var(--navy-primary); color: white; padding: 2.5rem 1.5rem; position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 1000; }
+        .sidebar-brand { font-size: 1.6rem; font-weight: 700; margin-bottom: 3.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1.5rem; }
+        .nav-link-admin { color: rgba(255,255,255,0.65); text-decoration: none; padding: 0.85rem 1.25rem; display: flex; align-items: center; border-radius: 12px; transition: 0.2s; font-weight: 500; cursor: pointer; margin-bottom: 0.5rem; }
+        .nav-link-admin i { margin-right: 14px; width: 20px; text-align: center; }
+        .nav-link-admin:hover, .nav-link-admin.active { background: rgba(255,255,255,0.1); color: white; }
+        .main-workspace { flex-grow: 1; padding: 3rem; margin-left: 280px; width: calc(100% - 280px); }
+        .section-panel { display: none; animation: fadeIn 0.4s ease-out; }
+        .section-panel.active { display: block; }
+        .admin-card { background: white; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); padding: 2.25rem; margin-bottom: 2rem; }
+        .stat-card h1 { font-size: 2.5rem; color: var(--navy-primary); }
+        .filter-input { padding: 10px 15px 10px 42px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; width: 320px; transition: 0.3s; }
+        .btn-delete { color: #ef4444; background: #fee2e2; width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; transition: 0.2s; text-decoration: none; }
+        .btn-delete:hover { background: #ef4444; color: white; transform: scale(1.1); }
+        .img-fauna-admin { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; border: 1px solid #eee; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-brand"><i class="fas fa-shield-halved me-2 text-info"></i> ECOSIS Admin</div>
+    <ul class="nav-menu list-unstyled flex-grow-1">
+        <li><a class="nav-link-admin active" onclick="switchSection('dashboard', this)"><i class="fas fa-chart-pie"></i> Dashboard Geral</a></li>
+        <li><a class="nav-link-admin" onclick="switchSection('fauna', this)"><i class="fas fa-leaf"></i> Monitor de Fauna</a></li>
+        <li><a class="nav-link-admin" onclick="switchSection('feedback', this)"><i class="fas fa-comments"></i> Feedbacks</a></li>
+        <li><a class="nav-link-admin" onclick="switchSection('simulador', this)"><i class="fas fa-microchip"></i> Logs do Sistema</a></li>
+        <li><a class="nav-link-admin" onclick="switchSection('pesquisa', this)"><i class="fas fa-database"></i> Pesquisas</a></li>
+    </ul>
+    <div class="pt-4 border-top border-secondary"><a th:href="@{/}" class="nav-link-admin text-danger"><i class="fas fa-sign-out-alt"></i> Sair do Painel</a></div>
+</aside>
+
+<main class="main-workspace">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div><h1 class="fw-bold mb-1" id="page-title">Dashboard Principal</h1><p class="text-muted mb-0">Gestão centralizada do ecossistema.</p></div>
+        <div class="admin-profile d-flex align-items-center bg-white p-2 pe-3 rounded-pill shadow-sm">
+            <img th:src="@{'/img/' + ${session.usuario_foto}}" class="rounded-circle me-3" width="45" height="45" style="object-fit: cover; border: 2px solid var(--ocean-accent);">
+            <div class="lh-1"><span class="d-block fw-bold small" th:text="${session.usuario_nome}">Admin</span><span class="badge p-0 text-success small" style="font-size: 0.65rem;">SISTEMA ATIVO</span></div>
+        </div>
+    </div>
+
+    <section id="dashboard" class="section-panel active">
+        <div class="row g-4">
+            <div class="col-md-3"><div class="admin-card text-center stat-card border-bottom border-primary border-5"><h1 th:text="${totalUsuarios}">0</h1><p class="text-muted small uppercase">Usuários</p></div></div>
+            <div class="col-md-3"><div class="admin-card text-center stat-card border-bottom border-success border-5"><h1 th:text="${totalFauna}">0</h1><p class="text-muted small uppercase">Relatos Fauna</p></div></div>
+            <div class="col-md-3"><div class="admin-card text-center stat-card border-bottom border-info border-5"><h1 th:text="${totalContatos}">0</h1><p class="text-muted small uppercase">Mensagens</p></div></div>
+            <div class="col-md-3"><div class="admin-card text-center stat-card border-bottom border-warning border-5"><h1 th:text="${totalSimulacoes}">0</h1><p class="text-muted small uppercase">Simulações</p></div></div>
+        </div>
+    </section>
+
+    <section id="fauna" class="section-panel">
+
+        <div class="admin-card border-start border-info border-5">
+            <div class="d-flex justify-content-between">
+                <h5 class="fw-bold text-navy">
+                    <i class="fas fa-list-ul me-2"></i>Espécies no Radar
+                    <span class="badge bg-info ms-2" style="font-size: 0.6rem;">SQL VIEW: v_ultimas_especies</span>
+                </h5>
+            </div>
+            <p class="text-muted small">Esta <b>VIEW</b> mostra as espécies únicas que foram registradas recentemente no sistema.</p>
+
+            <div class="row g-2 mt-2">
+                <div class="col-auto" th:each="v : ${resumoView}">
+                    <div class="px-3 py-2 bg-light rounded-pill border small fw-bold text-secondary">
+                        <i class="fas fa-fish me-1 text-primary"></i>
+                        <span th:text="${v}">Nome da Espécie</span>
+                    </div>
+                </div>
+                <div class="col-12" th:if="${#lists.isEmpty(resumoView)}">
+                    <small class="text-muted italic">Nenhum registro recente para exibir.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Monitoramento de Campo</h4>
+                    <div th:if="${param.procedure}" class="alert alert-success py-1 px-2 small mb-2">
+                        <i class="fas fa-check-circle me-1"></i> Auditoria de integridade concluída com sucesso!
+                    </div>
+                    <p class="text-muted small">
+                        <span class="badge bg-dark">SQL LIKE</span> Busca por Espécie.
+                        <span class="badge bg-dark">PROCEDURE</span> Validação de Integridade.
+                    </p>
+                </div>
+                <input type="text" class="filter-input" placeholder="Pesquisar espécie (LIKE)..." onkeyup="filter('tFauna', this)">
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle" id="tFauna">
+                    <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Espécie / Data</th>
+                        <th>Integridade</th>
+                        <th>Autor</th>
+                        <th class="text-end">Ação</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="f : ${listaFauna}">
+                        <td>
+                            <img th:if="${f.fotoNome != null}"
+                                 th:src="@{'/img/fauna/' + ${f.fotoNome}}"
+                                 class="img-fauna-admin">
+                            <i th:unless="${f.fotoNome != null}"
+                               class="fas fa-camera text-muted opacity-50"></i>
+                        </td>
+
+                        <td>
+                            <div class="fw-bold" th:text="${f.especie}">...</div>
+                            <small class="text-muted" th:text="${#temporals.format(f.dataAvistamento, 'dd/MM/yyyy')}"></small>
+                        </td>
+
+                        <td>
+                            <div th:switch="${f.integridade}">
+                            <span th:case="'COMPLETO'" class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i> Completo
+                            </span>
+
+                                <span th:case="'INCOMPLETO'" class="badge bg-warning text-dark">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Incompleto
+                            </span>
+
+                                <span th:case="*" class="badge bg-secondary">
+                                <i class="fas fa-clock me-1"></i> Não verificado
+                            </span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span th:text="${f.usuario.nome}"></span>
+                        </td>
+
+                        <td class="text-end">
+                            <a th:href="@{'/registros/delete/fauna/admin/' + ${f.id}}"
+                               class="btn-delete"
+                               onclick="return confirm('Confirmar exclusão definitiva?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="admin-card h-100 border-top border-danger border-5">
+                    <h5 class="fw-bold text-danger"><i class="fas fa-history me-2"></i>Auditoria (TRIGGER)</h5>
+                    <p class="text-muted small">Registros salvos automaticamente antes de serem excluídos.</p>
+                    <button class="btn btn-outline-danger btn-sm rounded-pill w-100 mt-2" onclick="document.getElementById('abaLogsExclusao').style.display='block'">
+                        Ver Histórico de Exclusão
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="admin-card h-100 border-top border-success border-5">
+                    <h5 class="fw-bold text-success"><i class="fas fa-tasks me-2"></i>Verificar Integridade (PROCEDURE)</h5>
+                    <p class="text-muted small">Executa a <b>PROCEDURE</b> para validar se os relatos estão completos.</p>
+                    <a th:href="@{/admin/executar-procedure}" class="btn btn-success btn-sm rounded-pill w-100 mt-2">
+                        <i class="fas fa-sync me-1"></i> Rodar Procedure Agora
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="abaLogsExclusao" class="admin-card mt-4 border-danger shadow" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold text-danger mb-0"><i class="fas fa-archive me-2"></i>Histórico de Auditoria (TRIGGER)</h6>
+                <button class="btn-close" onclick="document.getElementById('abaLogsExclusao').style.display='none'"></button>
+            </div>
+            <table class="table table-sm small">
+                <thead>
+                <tr>
+                    <th>Espécie</th>
+                    <th>ID Autor</th>
+                    <th>Data Exclusão</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log : ${listaLogsExclusao}">
+                    <td th:text="${log.especieNome}"></td>
+                    <td th:text="${log.usuarioId}"></td>
+                    <td th:text="${#temporals.format(log.dataExclusao, 'dd/MM/yyyy HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+
+
+    <section id="feedback" class="section-panel">
+
+        <!-- CARD PRINCIPAL -->
+        <div class="admin-card">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Mensagens dos Usuários</h4>
+
+                    <!-- ALERTA -->
+                    <div th:if="${param.feedback}" class="alert alert-success py-1 px-2 small mb-2">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Classificação automática executada!
+                    </div>
+
+                    <p class="text-muted small">
+                        <span class="badge bg-dark">SQL LIKE</span> Busca por mensagem
+                        <span class="badge bg-dark">CASE</span> Classificação automática
+                        <span class="badge bg-dark">PROCEDURE</span> Classificar feedback
+                    </p>
+                </div>
+
+                <input type="text"
+                       class="filter-input"
+                       placeholder="Buscar mensagem..."
+                       onkeyup="filter('tFed', this)">
+            </div>
+
+            <!-- TABELA -->
+            <div class="table-responsive">
+                <table class="table align-middle" id="tFed">
+
+                    <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Mensagem</th>
+                        <th>Classificação</th>
+                        <th>Data</th>
+                        <th class="text-end">Ação</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="f : ${listaContatos}">
+
+                        <td class="fw-bold" th:text="${f.usuario.nome}">...</td>
+
+                        <td class="small text-muted" th:text="${f.mensagem}">...</td>
+
+                        <!-- CLASSIFICAÇÃO -->
+                        <td>
+                            <div th:switch="${f.classificacao}">
+
+                            <span th:case="'POSITIVO'" class="badge bg-success">
+                                <i class="fas fa-smile me-1"></i> Positivo
+                            </span>
+
+                                <span th:case="'NEGATIVO'" class="badge bg-danger">
+                                <i class="fas fa-frown me-1"></i> Negativo
+                            </span>
+
+                                <span th:case="'NEUTRO'" class="badge bg-secondary">
+                                <i class="fas fa-meh me-1"></i> Neutro
+                            </span>
+
+                                <span th:case="*" class="badge bg-light text-dark">
+                                Não classificado
+                            </span>
+
+                            </div>
+                        </td>
+
+                        <td th:text="${#temporals.format(f.dataEnvio, 'dd/MM/yyyy')}">...</td>
+
+                        <td class="text-end">
+                            <a th:href="@{'/registros/delete/contato/' + ${f.id}}"
+                               class="btn-delete"
+                               onclick="return confirm('Confirmar exclusão?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- AÇÕES (PROCEDURE + LOG) -->
+        <div class="row g-4">
+
+            <!-- PROCEDURE -->
+            <div class="col-md-6">
+                <div class="admin-card h-100 border-top border-success border-5">
+                    <h5 class="fw-bold text-success">
+                        <i class="fas fa-brain me-2"></i>Classificar Feedback
+                    </h5>
+
+                    <p class="text-muted small">
+                        Executa a <b>PROCEDURE</b> que classifica automaticamente as mensagens.
+                    </p>
+
+                    <a th:href="@{/admin/executar-feedback}"
+                       class="btn btn-success btn-sm rounded-pill w-100 mt-2">
+                        <i class="fas fa-play me-1"></i> Rodar Classificação
+                    </a>
+                </div>
+            </div>
+
+            <!-- LOG -->
+            <div class="col-md-6">
+                <div class="admin-card h-100 border-top border-danger border-5">
+                    <h5 class="fw-bold text-danger">
+                        <i class="fas fa-history me-2"></i>Auditoria (TRIGGER)
+                    </h5>
+
+                    <p class="text-muted small">
+                        Mensagens excluídas ficam registradas automaticamente.
+                    </p>
+
+                    <button class="btn btn-outline-danger btn-sm rounded-pill w-100 mt-2"
+                            onclick="document.getElementById('abaLogsFeedback').style.display='block'">
+                        Ver Histórico
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TABELA DE LOG -->
+        <div id="abaLogsFeedback"
+             class="admin-card mt-4 border-danger shadow"
+             style="display: none;">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold text-danger mb-0">
+                    <i class="fas fa-archive me-2"></i>Histórico de Exclusões
+                </h6>
+
+                <button class="btn-close"
+                        onclick="document.getElementById('abaLogsFeedback').style.display='none'"></button>
+            </div>
+
+            <table class="table table-sm small">
+
+                <thead>
+                <tr>
+                    <th>Mensagem</th>
+                    <th>ID Usuário</th>
+                    <th>Data</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="log : ${listaLogsFeedback}">
+                    <td th:text="${log.mensagem}"></td>
+                    <td th:text="${log.usuarioId}"></td>
+                    <td th:text="${#temporals.format(log.dataExclusao, 'dd/MM/yyyy HH:mm')}"></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section id="simulador" class="section-panel">
+
+        <!-- ========================= -->
+        <!-- CARD PRINCIPAL -->
+        <!-- ========================= -->
+        <div class="admin-card">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">Simulações dos Usuários</h4>
+
+                    <!-- ALERTA -->
+                    <div th:if="${param.simulacao}" class="alert alert-success py-1 px-2 small mb-2">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Classificação automática executada!
+                    </div>
+
+                    <p class="text-muted small">
+                        <span class="badge bg-dark">CASE</span> Classificação por resultado
+                        <span class="badge bg-dark">PROCEDURE</span> Classificar simulações
+                        <span class="badge bg-dark">TRIGGER</span> Log automático
+                    </p>
+                </div>
+
+                <!-- 🔥 FILTRO IGUAL AO FEEDBACK -->
+                <input type="text"
+                       class="filter-input"
+                       placeholder="Buscar simulação..."
+                       onkeyup="filter('tSim', this)">
+            </div>
+
+            <!-- ========================= -->
+            <!-- TABELA PRINCIPAL -->
+            <!-- ========================= -->
+            <div class="table-responsive">
+                <table class="table align-middle" id="tSim">
+
+                    <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Espécie</th>
+                        <th>Resultado</th>
+                        <th>Classificação</th>
+                        <th>Data</th>
+                        <th class="text-end">Ação</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <!-- 🔥 DADOS DO CONTROLLER -->
+                    <!-- model.addAttribute("listaSimulacoes", simulacaoRepository.findAll()) -->
+                    <tr th:each="s : ${listaSimulacoes}">
+
+                        <td class="fw-bold" th:text="${s.usuario.nome}">...</td>
+
+                        <td th:text="${s.especie}">...</td>
+
+                        <!-- RESULTADO -->
+                        <td>
+                        <span class="badge bg-light text-primary border"
+                              th:text="${s.resultado}">...</span>
+                        </td>
+
+                        <!-- CLASSIFICAÇÃO (IGUAL FEEDBACK COM SWITCH) -->
+                        <td>
+                            <div th:switch="${s.classificacao}">
+
+                            <span th:case="'ALTO'" class="badge bg-success">
+                                <i class="fas fa-check me-1"></i> Alta chance
+                            </span>
+
+                                <span th:case="'BAIXO'" class="badge bg-danger">
+                                <i class="fas fa-times me-1"></i> Baixa chance
+                            </span>
+
+                                <span th:case="'MEDIO'" class="badge bg-warning text-dark">
+                                <i class="fas fa-exclamation me-1"></i> Média
+                            </span>
+
+                                <span th:case="*" class="badge bg-secondary">
+                                Não classificado
+                            </span>
+
+                            </div>
+                        </td>
+
+                        <td th:text="${#temporals.format(s.dataSimulacao, 'dd/MM/yyyy')}">...</td>
+
+                        <!-- DELETE -->
+                        <td class="text-end">
+                            <a th:href="@{'/registros/delete/sim/' + ${s.id}}"
+                               class="btn-delete"
+                               onclick="return confirm('Confirmar exclusão?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========================= -->
+        <!-- AÇÕES (IGUAL FEEDBACK) -->
+        <!-- ========================= -->
+        <div class="row g-4">
+
+            <!-- PROCEDURE -->
+            <div class="col-md-6">
+                <div class="admin-card h-100 border-top border-success border-5">
+                    <h5 class="fw-bold text-success">
+                        <i class="fas fa-brain me-2"></i>Classificar Simulações
+                    </h5>
+
+                    <p class="text-muted small">
+                        Executa a <b>PROCEDURE</b> que classifica automaticamente os resultados.
+                    </p>
+
+                    <a th:href="@{/admin/executar-simulacao}"
+                       class="btn btn-success btn-sm rounded-pill w-100 mt-2">
+                        <i class="fas fa-play me-1"></i> Rodar Classificação
+                    </a>
+                </div>
+            </div>
+
+            <!-- LOG -->
+            <div class="col-md-6">
+                <div class="admin-card h-100 border-top border-danger border-5">
+                    <h5 class="fw-bold text-danger">
+                        <i class="fas fa-history me-2"></i>Auditoria (TRIGGER)
+                    </h5>
+
+                    <p class="text-muted small">
+                        Simulações excluídas ficam registradas automaticamente.
+                    </p>
+
+                    <button class="btn btn-outline-danger btn-sm rounded-pill w-100 mt-2"
+                            onclick="document.getElementById('abaLogsSim').style.display='block'">
+                        Ver Histórico
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- LOG (IGUAL FEEDBACK) -->
+        <!-- ========================= -->
+        <div id="abaLogsSim"
+             class="admin-card mt-4 border-danger shadow"
+             style="display: none;">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold text-danger mb-0">
+                    <i class="fas fa-archive me-2"></i>Histórico de Exclusões
+                </h6>
+
+                <button class="btn-close"
+                        onclick="document.getElementById('abaLogsSim').style.display='none'"></button>
+            </div>
+
+            <table class="table table-sm small">
+
+                <thead>
+                <tr>
+                    <th>Espécie</th>
+                    <th>Resultado</th>
+                    <th>ID Usuário</th>
+                    <th>Data</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <!-- 🔥 LOGS -->
+                <!-- model.addAttribute("listaLogsSimulacao", ...) -->
+                <tr th:each="log : ${listaLogsSimulacao}">
+                    <td th:text="${log.especie}"></td>
+                    <td th:text="${log.resultado}"></td>
+                    <td th:text="${log.usuarioId}"></td>
+                    <td th:text="${#temporals.format(log.dataExclusao, 'dd/MM/yyyy HH:mm')}"></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section id="pesquisa" class="section-panel">
+        <div class="admin-card">
+            <h4 class="fw-bold mb-4">Monitor de Pesquisas</h4>
+            <table class="table"><thead><tr><th>Usuário</th><th>Embarcação</th><th>Satisfação</th><th class="text-end">Ação</th></tr></thead>
+                <tbody>
+                <tr th:each="p : ${listaPesquisas}">
+                    <td th:text="${p.usuario.nome}">...</td>
+                    <td th:text="${p.tipoEmbarcacao}">...</td>
+                    <td th:text="${p.satisfacaoProfissao}">...</td>
+                    <td class="text-end"><a th:href="@{'/registros/delete/pesquisa/' + ${p.id}}" class="btn-delete"><i class="fas fa-trash-alt"></i></a></td>
+                </tr>
+                </tbody></table>
+        </div>
+    </section>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function switchSection(sectionId, element = null) {
+
+            // esconder todas
+            document.querySelectorAll('.section-panel').forEach(s => {
+                s.classList.remove('active');
+            });
+
+            // remover ativo dos botões
+            document.querySelectorAll('.nav-link-admin').forEach(l => {
+                l.classList.remove('active');
+            });
+
+            // ativar seção correta
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+            }
+
+            // ativar botão clicado
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // ativar botão automaticamente (quando vem da URL)
+                document.querySelectorAll('.nav-link-admin').forEach(btn => {
+                    if (btn.getAttribute("onclick")?.includes(sectionId)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            // título dinâmico
+            const titles = {
+                'dashboard': 'Dashboard Principal',
+                'fauna': 'Monitor de Fauna Marinha',
+                'feedback': 'Central de Feedbacks',
+                'simulador': 'Logs de Simulação',
+                'pesquisa': 'Base de Dados de Pesquisas'
+            };
+
+            document.getElementById('page-title').innerText = titles[sectionId] || 'Painel';
+        }
+
+        // tornar função global (IMPORTANTE)
+        window.switchSection = switchSection;
+
+        // controle por URL (?tab=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+
+        if (tab) {
+            switchSection(tab);
+        } else {
+            switchSection('dashboard');
+        }
+
+    });
+
+
+    function filter(tableId, input) {
+    let val = input.value.toLowerCase();
+    let trs = document.getElementById(tableId).getElementsByTagName("tr");
+
+    for (let i = 1; i < trs.length; i++) {
+        trs[i].style.display =
+            trs[i].innerText.toLowerCase().includes(val) ? "" : "none";
+    }
+}
+</script>
+</body>
+</html>

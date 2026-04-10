@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direitos e Simulação | ECOSIS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+
+        /* Adicione isso dentro do seu <style> existente */
+.container-fluid {
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+}
+
+/* Garante que em telas pequenas o menu não fique espremido */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+        .rights-hero {
+            background: linear-gradient(135deg, #001a33 0%, #004e92 100%);
+            padding: 100px 0 140px;
+            color: white;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+        }
+        .info-card {
+            border: none;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: white;
+            border-bottom: 4px solid transparent;
+        }
+        .info-card:hover {
+            transform: translateY(-10px);
+            border-bottom-color: #0dcaf0;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+        .doc-item {
+            padding: 15px;
+            border-radius: 12px;
+            background: #f8fafc;
+            margin-bottom: 10px;
+            border-left: 4px solid #0dcaf0;
+            transition: 0.3s;
+        }
+        .doc-item:hover { background: #f1f5f9; transform: translateX(5px); }
+
+        .simulacao-container {
+            background: #ffffff;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 10;
+        }
+        .form-label-custom {
+            color: #001a33;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .input-simulacao {
+            background-color: #f1f5f9 !important;
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 15px !important;
+            padding: 14px !important;
+            color: #001a33 !important;
+            font-weight: 500;
+        }
+        .input-simulacao:focus {
+            background-color: #fff !important;
+            border-color: #0dcaf0 !important;
+            box-shadow: 0 0 0 4px rgba(13, 202, 240, 0.15) !important;
+        }
+        .faq-section .accordion-button:not(.collapsed) {
+            background-color: rgba(13, 202, 240, 0.1);
+            color: #001a33;
+        }
+
+        .avatar-wrapper { position: relative; display: inline-block; vertical-align: middle; }
+        .status-indicator {
+            position: absolute; bottom: 1px; right: 1px; width: 8px; height: 8px;
+            background-color: #22c55e; border-radius: 50%; border: 1px solid #001a33;
+        }
+        .nav-avatar {
+            width: 35px; height: 35px; border-radius: 50%; border: 2px solid #0dcaf0; object-fit: cover;
+        }
+        .bg-navy { background-color: #001a33; }
+        .text-navy { color: #001a33; }
+
+
+        /* CORREÇÃO FINAL - NÃO MEXER */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.hero-bg {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+header.hero-bg {
+    left: 0 !important;
+    right: 0 !important;
+}
+
+        /* Aumenta o recuo lateral do conteúdo */
+.navbar-padding, .container-fluid {
+    padding-left: 6% !important;
+    padding-right: 6% !important;
+}
+
+/* Garante que as linhas (rows) não "comam" o padding do container */
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Ajuste específico para dispositivos móveis para não ficar apertado demais */
+@media (max-width: 768px) {
+    .navbar-padding, .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+    </style>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-navy sticky-top shadow">
+    <div class="container-fluid" style="padding: 0 5% !important;">
+        <a class="navbar-brand fw-bold" th:href="@{/}"><i class="fas fa-water me-2 text-info"></i>ECOSIS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/regras}"><i class="fas fa-gavel me-1"></i> Regras</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor active" th:href="@{/direitos}"><i class="fas fa-balance-scale me-1"></i> Direitos</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/noticias}"><i class="fas fa-newspaper me-1"></i> Notícias</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/educacao}"><i class="fas fa-graduation-cap me-1"></i> Educação</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/contato}"><i class="fas fa-envelope me-1"></i> Contato</a></li>
+
+                <li th:if="${session.usuario_id != null}" class="ms-lg-3 profile-dropdown">
+                    <a th:href="@{/perfil}" class="d-flex align-items-center text-decoration-none">
+                        <div class="avatar-wrapper">
+                            <img th:src="@{'/img/' + ${session.usuario_foto != null ? session.usuario_foto : 'avatar.png'}}" class="nav-avatar" alt="Perfil">
+                            <div class="status-indicator"></div>
+                        </div>
+                    </a>
+                </li>
+
+                <li th:if="${session.usuario_id == null}" class="ms-lg-3">
+                    <a class="btn btn-sm btn-outline-info px-3 btn-animate" th:href="@{/autenticacao}"><i class="fas fa-sign-in-alt me-1"></i> Entrar</a>
+                </li>
+                <li th:if="${session.usuario_id == null}" class="ms-lg-2">
+                    <a class="btn btn-sm btn-info text-white px-3 shadow-sm btn-animate" th:href="@{/autenticacao}"><i class="fas fa-user-plus me-1"></i> Criar Conta</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<header class="rights-hero text-center">
+    <div class="container" data-aos="zoom-out">
+        <span class="badge bg-info mb-3 px-3 py-2 shadow-sm">PROTEÇÃO SOCIAL</span>
+        <h1 class="display-4 fw-bold mb-3">Direitos do Pescador: Seguro-Defeso</h1>
+        <p class="lead opacity-90 mx-auto" style="max-width: 750px;">O Seguro-Defeso é um benefício de um salário mínimo pago ao pescador artesanal que fica impedido de pescar em razão da preservação das espécies.</p>
+    </div>
+</header>
+
+<main class="container mb-5" style="margin-top: -60px;">
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4" data-aos="fade-up">
+            <div class="info-card p-4 shadow-sm text-center h-100">
+                <div class="icon-circle bg-info-subtle text-info mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fas fa-hand-holding-usd fa-xl"></i>
+                </div>
+                <h5 class="fw-bold text-navy">Auxílio Financeiro</h5>
+                <p class="text-muted small mb-0">Recebimento de 1 salário mínimo mensal durante todo o período em que a pesca da espécie estiver proibida.</p>
+            </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="info-card p-4 shadow-sm text-center h-100">
+                <div class="icon-circle bg-primary-subtle text-primary mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fas fa-user-shield fa-xl"></i>
+                </div>
+                <h5 class="fw-bold text-navy">Exclusividade</h5>
+                <p class="text-muted small mb-0">Destinado a pescadores que não possuem outra fonte de renda e dedicam-se exclusivamente à pesca artesanal.</p>
+            </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-card p-4 shadow-sm text-center h-100">
+                <div class="icon-circle bg-success-subtle text-success mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fas fa-calendar-check fa-xl"></i>
+                </div>
+                <h5 class="fw-bold text-navy">Habilitação</h5>
+                <p class="text-muted small mb-0">É necessário ter o Registro Geral da Atividade Pesqueira (RGP) ativo há pelo menos um ano no Ministério.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-lg-7" data-aos="fade-right">
+            <div class="bg-white rounded-4 shadow-sm p-4 p-md-5 h-100 border-top border-info border-4">
+                <h3 class="fw-bold text-navy mb-4"><i class="fas fa-copy text-info me-2"></i>Documentos Necessários</h3>
+                <div class="doc-item d-flex align-items-center">
+                    <i class="fas fa-id-card me-3 text-info"></i>
+                    <span>Documento de Identidade oficial com foto e CPF.</span>
+                </div>
+                <div class="doc-item d-flex align-items-center">
+                    <i class="fas fa-address-book me-3 text-info"></i>
+                    <span>Registro de Pescador Profissional (RGP) emitido há 1 ano.</span>
+                </div>
+                <div class="doc-item d-flex align-items-center">
+                    <i class="fas fa-receipt me-3 text-info"></i>
+                    <span>Cópia de comprovantes de venda de pescado dos últimos 12 meses.</span>
+                </div>
+                <div class="doc-item d-flex align-items-center">
+                    <i class="fas fa-home me-3 text-info"></i>
+                    <span>Comprovante de residência atualizado.</span>
+                </div>
+                <div class="doc-item d-flex align-items-center">
+                    <i class="fas fa-file-invoice-dollar me-3 text-info"></i>
+                    <span>Comprovante de pagamento da contribuição previdenciária (GPS).</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5" data-aos="fade-left">
+            <div class="bg-navy text-white rounded-4 shadow-sm p-4 p-md-5 h-100">
+                <h4 class="fw-bold mb-4 text-info"><i class="fas fa-lightbulb me-2"></i>Dicas Importantes</h4>
+                <ul class="list-unstyled">
+                    <li class="mb-4">
+                        <h6 class="fw-bold"><i class="fas fa-mobile-alt me-2"></i>Aplicativo Meu INSS</h6>
+                        <p class="small opacity-75">O pedido agora é 100% digital. Você não precisa ir até uma agência, basta usar o app ou site oficial.</p>
+                    </li>
+                    <li class="mb-4">
+                        <h6 class="fw-bold"><i class="fas fa-ban me-2"></i>Acúmulo de Benefícios</h6>
+                        <p class="small opacity-75">Você não pode receber o Seguro-Defeso se já recebe Auxílio-Doença ou Aposentadoria.</p>
+                    </li>
+                    <li class="mb-0">
+                        <h6 class="fw-bold"><i class="fas fa-hourglass-half me-2"></i>Prazo de Solicitação</h6>
+                        <p class="small opacity-75">O pedido deve ser feito no máximo até o final do período de defeso da sua espécie.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10" data-aos="zoom-in">
+            <div th:if="${session.usuario_id != null}" class="simulacao-container p-4 p-md-5">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold text-navy">Simulador de Elegibilidade</h2>
+                    <p class="text-muted">Preencha os dados abaixo para verificar a probabilidade de aprovação do seu benefício.</p>
+                </div>
+
+                <form th:action="@{/direitos/simular}" method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label-custom">Anos de Registro (RGP)</label>
+                            <input type="number" name="tempoRegistro" class="form-control input-simulacao" placeholder="Ex: 3" min="0" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label-custom">Espécie Principal que Pesca</label>
+                            <input type="text" name="especie" class="form-control input-simulacao" placeholder="Ex: Caranguejo-Uçá" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label-custom">Possui outra renda formal?</label>
+                            <select name="outraRenda" class="form-select input-simulacao" required>
+                                <option value="Nao">Não, apenas a pesca</option>
+                                <option value="Sim">Sim, possuo outro emprego</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label-custom">Recebe outros auxílios do INSS?</label>
+                            <select name="outroBeneficio" class="form-select input-simulacao" required>
+                                <option value="Nao">Não recebo outros auxílios</option>
+                                <option value="Sim">Sim, recebo auxílio/pensão</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-info btn-lg px-5 py-3 text-white fw-bold rounded-pill shadow-lg btn-animate">
+                            <i class="fas fa-search-dollar me-2"></i>Analisar Meus Direitos
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div th:unless="${session.usuario_id != null}" class="alert alert-info text-center p-5 rounded-4 border-0 shadow-sm">
+                <i class="fas fa-lock fa-3x mb-3 text-navy opacity-25"></i>
+                <h4 class="fw-bold text-navy">Acesso Restrito ao Simulador</h4>
+                <p class="mb-4">Para realizar sua simulação personalizada e salvar seu histórico, você precisa estar conectado.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a th:href="@{/autenticacao}" class="btn btn-navy text-white rounded-pill px-4">Entrar na Conta</a>
+                    <a th:href="@{/autenticacao}" class="btn btn-outline-navy rounded-pill px-4">Cadastrar-se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="py-5 faq-section">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h3 class="fw-bold text-navy">Dúvidas Frequentes (FAQ)</h3>
+            <div class="bg-info mx-auto" style="width: 50px; height: 3px; border-radius: 2px;"></div>
+        </div>
+
+        <div class="accordion accordion-flush shadow-sm rounded-4 overflow-hidden" id="accordionFAQ" data-aos="fade-up">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        Qual a duração do benefício?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionFAQ">
+                    <div class="accordion-body text-muted">
+                        A duração corresponde exatamente ao período de defeso fixado pelo IBAMA para a espécie que o pescador captura, variando geralmente entre 3 a 5 meses.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                        Pescador artesanal pode receber Bolsa Família junto?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                    <div class="accordion-body text-muted">
+                        Sim. O recebimento do Seguro-Defeso não cancela o Bolsa Família, mas o valor do seguro é somado à renda mensal da família para fins de cálculo de elegibilidade do programa social.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                        E se o meu RGP tiver menos de um ano?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+                    <div class="accordion-body text-muted">
+                        Infelizmente, um dos requisitos legais é que o registro de pescador profissional tenha sido emitido há pelo menos 1 ano da data do início do defeso.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="bg-navy py-4 text-white-50 border-top border-secondary text-center">
+    <p class="mb-0 small">© 2026 ECOSIS - Sustentabilidade Marinha | Jonatas Gabriel</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
+
+    // Captura parâmetros da URL para o Pop-up
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    const resultado = urlParams.get('resultado');
+
+    if (status === 'sucesso') {
+        Swal.fire({
+            title: resultado === 'APROVADO' ? 'Simulação Concluída!' : 'Atenção!',
+            html: `Seu resultado foi: <b>${resultado}</b>.<br><small>Os dados foram salvos no seu perfil.</small>`,
+            icon: resultado === 'APROVADO' ? 'success' : 'warning',
+            background: '#ffffff',
+            confirmButtonColor: '#0dcaf0',
+            confirmButtonText: 'Entendido',
+            timer: 5000
+        });
+    }
+</script>
+</body>
+</html>

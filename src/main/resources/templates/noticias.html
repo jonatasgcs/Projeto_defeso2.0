@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notícias e Artigos | ECOSIS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        .container-fluid { padding-left: 5% !important; padding-right: 5% !important; }
+        @media (max-width: 768px) { .container-fluid { padding-left: 15px !important; padding-right: 15px !important; } }
+
+        .news-header {
+            background: linear-gradient(135deg, var(--navy) 0%, #004e92 100%);
+            padding: 80px 0;
+            color: white;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+        }
+
+        .news-divider { text-align: center; margin-bottom: 50px; position: relative; }
+        .news-divider i {
+            font-size: 2rem; color: var(--info-blue); background: #f8fafc;
+            padding: 10px; border-radius: 50%; animation: rotateCompass 5s infinite linear;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        @keyframes rotateCompass { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .news-divider hr { position: absolute; top: 50%; width: 100%; z-index: -1; border-color: #e2e8f0; opacity: 1; }
+
+        .news-card {
+            border: none; border-radius: 20px; overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: white; height: 100%;
+        }
+        .news-card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0, 30, 60, 0.12) !important; }
+        .news-img-container { height: 220px; overflow: hidden; position: relative; background: #f1f5f9; }
+        .news-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .news-card:hover .news-img-container img { transform: scale(1.1); }
+
+        .category-tag {
+            position: absolute; top: 15px; left: 15px; z-index: 2;
+            padding: 6px 12px; border-radius: 50px; font-size: 0.75rem;
+            text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;
+        }
+
+        .research-card {
+            background: #ffffff; border-radius: 30px; border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 40px rgba(0, 30, 60, 0.1); margin-top: 60px;
+        }
+        .custom-input-light {
+            background-color: #f8fafc !important; border: 1px solid #e2e8f0 !important;
+            color: var(--navy) !important; border-radius: 12px !important; padding: 12px !important;
+        }
+
+        .avatar-wrapper { position: relative; display: inline-block; vertical-align: middle; }
+        .nav-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--info-blue); object-fit: cover; }
+        .status-indicator { position: absolute; bottom: 1px; right: 1px; width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; border: 1px solid var(--navy); }
+
+        .btn-animate { transition: all 0.3s ease; }
+        .btn-animate:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+
+        html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
+        .row { margin-left: 0 !important; margin-right: 0 !important; }
+    </style>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-navy sticky-top shadow">
+    <div class="container-fluid" style="padding: 0 5% !important;">
+        <a class="navbar-brand fw-bold" th:href="@{/}"><i class="fas fa-water me-2 text-info"></i>ECOSIS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/regras}"><i class="fas fa-gavel me-1"></i> Regras</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/direitos}"><i class="fas fa-balance-scale me-1"></i> Direitos</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor active" th:href="@{/noticias}"><i class="fas fa-newspaper me-1"></i> Notícias</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/educacao}"><i class="fas fa-graduation-cap me-1"></i> Educação</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/contato}"><i class="fas fa-envelope me-1"></i> Contato</a></li>
+
+                <li th:if="${session.usuario_id == null}" class="ms-lg-3">
+                    <a class="btn btn-sm btn-outline-info px-3 btn-animate" th:href="@{/autenticacao}"><i class="fas fa-sign-in-alt me-1"></i> Entrar</a>
+                </li>
+                <li th:if="${session.usuario_id == null}" class="ms-lg-2">
+                    <a class="btn btn-sm btn-info text-white px-3 shadow-sm btn-animate" th:href="@{/autenticacao}"><i class="fas fa-user-plus me-1"></i> Criar Conta</a>
+                </li>
+
+                <li th:if="${session.usuario_id != null}" class="ms-lg-3 profile-dropdown">
+                    <a th:href="@{/perfil}" class="d-flex align-items-center text-decoration-none">
+                        <div class="avatar-wrapper">
+                            <img th:src="@{'/img/' + ${session.usuario_foto != null ? session.usuario_foto : 'avatar.png'}}" class="nav-avatar" alt="Perfil">
+                            <div class="status-indicator"></div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="news-header text-center">
+    <div class="container" data-aos="fade-up">
+        <h1 class="display-4 fw-bold mb-2">Central de Informações</h1>
+        <p class="lead opacity-75">Atualizações exclusivas sobre o ecossistema marinho e sustentabilidade.</p>
+    </div>
+</header>
+
+<main class="container mb-5">
+    <div class="news-divider" data-aos="zoom-in">
+        <hr><i class="fas fa-compass"></i>
+        <p class="mt-3 text-muted fw-semibold">Explorando as últimas atualizações</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <article class="news-card shadow-sm position-relative">
+                <span class="badge bg-info category-tag shadow-sm">Legislação</span>
+                <div class="news-img-container">
+                    <img src="https://images.pexels.com/photos/1034812/pexels-photo-1034812.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Drone de fiscalização">
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-navy">IBAMA reforça fiscalização com drones</h5>
+                    <p class="text-muted small">Monitoramento aéreo de alta precisão é implementado para combater a pesca ilegal.</p>
+                    <a href="#" class="btn btn-outline-info btn-sm w-100 rounded-pill fw-bold mt-2">Ver Matéria</a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <article class="news-card shadow-sm position-relative">
+                <span class="badge bg-success category-tag shadow-sm">Ambiental</span>
+                <div class="news-img-container">
+                    <img src="https://images.pexels.com/photos/14870570/pexels-photo-14870570.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Manguezal">
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-navy">Berçários do Mar: O papel do Manguezal</h5>
+                    <p class="text-muted small">Descubra como os manguezais garantem a renovação das espécies marinhas.</p>
+                    <a href="#" class="btn btn-outline-info btn-sm w-100 rounded-pill fw-bold mt-2">Ver Matéria</a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <article class="news-card shadow-sm position-relative">
+                <span class="badge bg-warning text-dark category-tag shadow-sm">Economia</span>
+                <div class="news-img-container">
+                    <img src="https://images.pexels.com/photos/6941095/pexels-photo-6941095.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Safra de Camarão">
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-navy">Expectativas para a Safra do Camarão</h5>
+                    <p class="text-muted small">Especialistas preveem alta produtividade este ano devido ao respeito ao defeso.</p>
+                    <a href="#" class="btn btn-outline-info btn-sm w-100 rounded-pill fw-bold mt-2">Ver Matéria</a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <article class="news-card shadow-sm position-relative">
+                <span class="badge bg-danger category-tag shadow-sm">Defeso</span>
+                <div class="news-img-container">
+                    <img src="https://images.pexels.com/photos/3044470/pexels-photo-3044470.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Redes de Pesca">
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-navy">Calendário de Defeso Atualizado 2026</h5>
+                    <p class="text-muted small">Confira as datas oficiais de proibição para cada espécie marinha.</p>
+                    <a href="#" class="btn btn-outline-info btn-sm w-100 rounded-pill fw-bold mt-2">Ver Detalhes</a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <article class="news-card shadow-sm position-relative">
+                <span class="badge bg-primary category-tag shadow-sm">Tecnologia</span>
+                <div class="news-img-container">
+                    <img src="https://images.pexels.com/photos/6325455/pexels-photo-6325455.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Monitoramento Marinho">
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-navy">Rastreamento via Satélite</h5>
+                    <p class="text-muted small">Sistemas avançados permitem identificar embarcações em áreas de proteção.</p>
+                    <a href="#" class="btn btn-outline-info btn-sm w-100 rounded-pill fw-bold mt-2">Ver Matéria</a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <article class="news-card shadow-sm position-relative">
+                <span class="badge bg-secondary category-tag shadow-sm">Comunidade</span>
+                <div class="news-img-container">
+                    <img src="https://images.pexels.com/photos/1010537/pexels-photo-1010537.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Pescadores e o Mar">
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-navy">Pescadores e Sustentabilidade</h5>
+                    <p class="text-muted small">União das comunidades fortalece a vigilância do futuro marinho local.</p>
+                    <a href="#" class="btn btn-outline-info btn-sm w-100 rounded-pill fw-bold mt-2">Ver Matéria</a>
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <div class="research-card p-4 p-md-5 mt-5" data-aos="fade-up">
+        <div class="text-center mb-5">
+            <span class="badge bg-success mb-2">Repórter da Natureza</span>
+            <h2 class="fw-bold text-navy">Relate um Avistamento de Fauna</h2>
+            <p class="text-muted">Viu algo incomum no mar? Registre e ajude nosso inventário comunitário.</p>
+        </div>
+
+        <form th:if="${session.usuario_id != null}" th:action="@{/noticias/registrar}" method="POST" enctype="multipart/form-data" class="row g-4">
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-navy">Nome da Espécie</label>
+                <input type="text" name="especie" class="form-control custom-input-light" placeholder="Ex: Tartaruga Marinha, Golfinho" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-navy">Localização</label>
+                <input type="text" name="localizacao" class="form-control custom-input-light" placeholder="Ex: Praia Grande, 2 milhas da costa" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-navy">Data da Observação</label>
+                <input type="date" name="dataAvistamento" class="form-control custom-input-light" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold text-navy">Anexar Foto (Opcional)</label>
+                <input type="file" name="file" class="form-control custom-input-light" accept="image/*">
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-bold text-navy">Observações Técnicas</label>
+                <textarea name="observacoes" class="form-control custom-input-light" rows="3" placeholder="O animal estava ferido? Estava em grupo?"></textarea>
+            </div>
+            <div class="col-12 text-center mt-4">
+                <button type="submit" class="btn btn-success px-5 py-3 text-white fw-bold rounded-pill shadow-sm">
+                    <i class="fas fa-paper-plane me-2"></i>Publicar Relato no Sistema
+                </button>
+            </div>
+        </form>
+
+        <div th:unless="${session.usuario_id != null}" class="text-center py-4">
+            <i class="fas fa-user-lock fa-3x text-muted mb-3 opacity-25"></i>
+            <h5 class="fw-bold text-navy">Acesso Restrito</h5>
+            <p>Somente usuários logados podem enviar relatos para o banco de dados.</p>
+            <a th:href="@{/autenticacao}" class="btn bg-navy text-white rounded-pill px-4">Fazer Login</a>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-navy py-4 text-white-50 border-top border-secondary text-center mt-auto">
+    <p class="mb-0 small">© 2026 ECOSIS - Sustentabilidade Marinha | Jonatas Gabriel</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('status') === 'sucesso') {
+        Swal.fire({
+            title: 'Relato Recebido!',
+            text: 'Obrigado por contribuir com o monitoramento da nossa fauna marinha.',
+            icon: 'success',
+            confirmButtonColor: '#198754'
+        });
+    }
+</script>
+</body>
+</html>

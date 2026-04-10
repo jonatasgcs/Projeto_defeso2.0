@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato e Órgãos Oficiais | ECOSIS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        /* Ajuste de largura das bordas */
+        .container-fluid {
+            padding-left: 5% !important;
+            padding-right: 5% !important;
+        }
+
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+        }
+
+        :root { --navy: #001a33; --info-blue: #0dcaf0; }
+        .bg-navy { background-color: var(--navy); }
+        .text-navy { color: var(--navy); }
+        .contact-hero {
+            background: linear-gradient(135deg, var(--navy) 0%, #004e92 100%);
+            padding: 100px 0 160px;
+            color: white;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+        }
+        .main-container { margin-top: -100px; position: relative; z-index: 10; }
+        .contact-card {
+            background: #ffffff;
+            border-radius: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 15px 35px rgba(0, 30, 60, 0.08);
+            height: 100%;
+        }
+        .org-badge {
+            width: 45px; height: 45px;
+            background: rgba(13, 202, 240, 0.1);
+            color: var(--info-blue);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 10px; font-size: 1.2rem;
+        }
+        .custom-input-light {
+            background-color: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            color: var(--navy) !important;
+            border-radius: 12px !important;
+            padding: 15px !important;
+        }
+        .avatar-wrapper { position: relative; display: inline-block; vertical-align: middle; }
+        .status-indicator { position: absolute; bottom: 1px; right: 1px; width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; border: 1px solid var(--navy); }
+        .nav-avatar { width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--info-blue); object-fit: cover; }
+        .btn-animate { transition: all 0.3s ease; }
+        .btn-animate:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(13, 202, 240, 0.3); }
+
+
+
+        /* CORREÇÃO FINAL - NÃO MEXER */
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.hero-bg {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+header.hero-bg {
+    left: 0 !important;
+    right: 0 !important;
+}
+
+        /* Aumenta o recuo lateral do conteúdo */
+.navbar-padding, .container-fluid {
+    padding-left: 6% !important;
+    padding-right: 6% !important;
+}
+
+/* Garante que as linhas (rows) não "comam" o padding do container */
+.row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Ajuste específico para dispositivos móveis para não ficar apertado demais */
+@media (max-width: 768px) {
+    .navbar-padding, .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+    </style>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-navy sticky-top shadow">
+    <div class="container-fluid" style="padding: 0 5% !important;">
+        <a class="navbar-brand fw-bold" th:href="@{/}"><i class="fas fa-water me-2 text-info"></i>ECOSIS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/}"><i class="fas fa-home me-1"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/regras}"><i class="fas fa-gavel me-1"></i> Regras</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/direitos}"><i class="fas fa-balance-scale me-1"></i> Direitos</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/noticias}"><i class="fas fa-newspaper me-1"></i> Notícias</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor" th:href="@{/educacao}"><i class="fas fa-graduation-cap me-1"></i> Educação</a></li>
+                <li class="nav-item"><a class="nav-link px-3 hover-anchor active" th:href="@{/contato}"><i class="fas fa-envelope me-1"></i> Contato</a></li>
+
+                <li th:if="${session.usuario_id == null}" class="ms-lg-3">
+                    <a class="btn btn-sm btn-outline-info px-3 btn-animate" th:href="@{/autenticacao}">
+                        <i class="fas fa-sign-in-alt me-1"></i> Entrar
+                    </a>
+                </li>
+                <li th:if="${session.usuario_id == null}" class="ms-lg-2">
+                    <a class="btn btn-sm btn-info text-white px-3 shadow-sm btn-animate" th:href="@{/autenticacao}">
+                        <i class="fas fa-user-plus me-1"></i> Criar Conta
+                    </a>
+                </li>
+
+                <li th:if="${session.usuario_id != null}" class="ms-lg-3 profile-dropdown">
+                    <a th:href="@{/perfil}" class="d-flex align-items-center text-decoration-none">
+                        <div class="avatar-wrapper">
+                            <img th:src="@{'/img/' + ${session.usuario_foto}}" class="nav-avatar" alt="Perfil">
+                            <div class="status-indicator"></div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header class="contact-hero text-center">
+    <div class="container-fluid" data-aos="fade-up">
+        <h1 class="display-4 fw-bold">Canais de Atendimento</h1>
+        <p class="lead opacity-75">Fale com o ECOSIS ou consulte os órgãos de regulamentação da pesca.</p>
+    </div>
+</header>
+
+<main class="container-fluid mb-5 main-container">
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-lg-6" data-aos="fade-right">
+            <div class="contact-card p-4 p-md-5">
+                <div class="mb-4 text-center">
+                    <i class="fas fa-envelope-open-text text-info fa-2x mb-2"></i>
+                    <h3 class="fw-bold text-navy">Fale Conosco</h3>
+                    <p class="text-muted small" th:if="${session.usuario_id != null}">
+                        Olá <b><span th:text="${session.usuario_nome}">Pescador</span></b>, deixe sua mensagem abaixo.
+                    </p>
+                </div>
+
+                <form th:if="${session.usuario_id != null}" th:action="@{/contato/enviar}" method="POST">
+                    <div class="mb-4 text-start">
+                        <label class="fw-bold text-navy mb-2 small">Sua Mensagem</label>
+                        <textarea name="mensagem" class="form-control custom-input-light" rows="5" placeholder="Escreva sua dúvida ou sugestão aqui..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info w-100 py-3 text-white fw-bold rounded-pill shadow-sm btn-animate">
+                        <i class="fas fa-paper-plane me-2"></i>Enviar Mensagem
+                    </button>
+                </form>
+
+                <div th:unless="${session.usuario_id != null}" class="text-center py-5 bg-light rounded-4 border">
+                    <i class="fas fa-user-lock fa-2x text-muted mb-3 opacity-25"></i>
+                    <h5 class="fw-bold text-navy">Identificação Necessária</h5>
+                    <p class="text-muted small">Por favor, faça login para enviar mensagens através do sistema.</p>
+                    <a th:href="@{/autenticacao}" class="btn bg-navy text-white rounded-pill px-4 btn-animate">Fazer Login</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-left">
+            <div class="contact-card p-4 p-md-5">
+                <div class="mb-4 text-center">
+                    <i class="fas fa-building-shield text-info fa-2x mb-2"></i>
+                    <h3 class="fw-bold text-navy">Órgãos Oficiais</h3>
+                </div>
+                <div class="row g-3">
+                    <div class="col-12 border-bottom pb-3 mb-2">
+                        <div class="d-flex align-items-center">
+                            <div class="org-badge me-3"><i class="fas fa-landmark"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-navy">MPA</h6>
+                                <p class="small text-muted mb-0">Ministério da Pesca e Aquicultura.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 border-bottom pb-3 mb-2">
+                        <div class="d-flex align-items-center">
+                            <div class="org-badge me-3"><i class="fas fa-leaf"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-navy">IBAMA</h6>
+                                <p class="small text-muted mb-0">Fiscalização ambiental e Defeso.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 border-bottom pb-3 mb-2">
+                        <div class="d-flex align-items-center">
+                            <div class="org-badge me-3"><i class="fas fa-university"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-navy">INSS</h6>
+                                <p class="small text-muted mb-0">Habilitação do Seguro-Defeso.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center">
+                            <div class="org-badge me-3"><i class="fas fa-anchor"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-navy">Marinha do Brasil</h6>
+                                <p class="small text-muted mb-0">Segurança da navegação.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-navy py-4 text-white-50 border-top border-secondary text-center mt-auto">
+    <p class="mb-0 small">© 2026 ECOSIS - Sustentabilidade Marinha | Jonatas Gabriel</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    AOS.init({ duration: 1000, once: true });
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('status') === 'sucesso') {
+        Swal.fire({
+            title: 'Mensagem Enviada!',
+            text: 'Recebemos seu contato.',
+            icon: 'success',
+            confirmButtonColor: '#0dcaf0'
+        });
+    }
+</script>
+</body>
+</html>
