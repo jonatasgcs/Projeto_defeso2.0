@@ -101,5 +101,5 @@ Novas funcionalidades e melhorias estão sendo implementadas continuamente.
 ---
 
 ## 👨‍💻 Autor
-
+Jonatas gabriel e equipe 
 Desenvolvido como parte de estudo e portfólio acadêmico/profissional.
