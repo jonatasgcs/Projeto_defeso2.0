@@ -9,13 +9,9 @@ Sistema desenvolvido utilizando **Java**, **Spring Boot** e **MySQL**, com foco 
 <p align="center">
 
 ![Java](https://img.shields.io/badge/Java-17-red?style=for-the-badge)
-
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-success?style=for-the-badge)
-
 ![MySQL](https://img.shields.io/badge/MySQL-Database-blue?style=for-the-badge)
-
 ![SQL](https://img.shields.io/badge/SQL-Relational%20Database-orange?style=for-the-badge)
-
 ![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge)
 
 </p>
@@ -28,9 +24,9 @@ Sistema desenvolvido utilizando **Java**, **Spring Boot** e **MySQL**, com foco 
 
 <p align="center">
 
-<a href="LINK_DO_VIDEO">
+<a href="./img/video do projeto.mp4">
 
-<img src="docs/images/capa-video.png" width="800">
+<img src="./img/pagian home.png" width="90%" alt="Demonstração do ECOSIS">
 
 </a>
 
@@ -117,7 +113,7 @@ Criadas para simplificar consultas complexas e disponibilizar informações orga
 
 # 🛠 Tecnologias Utilizadas
 
-## Back-end
+## 💻 Back-end
 
 - Java
 - Spring Boot
@@ -128,7 +124,7 @@ Criadas para simplificar consultas complexas e disponibilizar informações orga
 
 ---
 
-## Banco de Dados
+## 🗄 Banco de Dados
 
 - MySQL
 - SQL
@@ -139,7 +135,7 @@ Criadas para simplificar consultas complexas e disponibilizar informações orga
 
 ---
 
-## Front-end
+## 🎨 Front-end
 
 - Thymeleaf
 - HTML
@@ -149,7 +145,7 @@ Criadas para simplificar consultas complexas e disponibilizar informações orga
 
 ---
 
-## Ferramentas
+## 🧰 Ferramentas
 
 - IntelliJ IDEA
 - MySQL Workbench
@@ -170,51 +166,83 @@ Além disso, foram utilizados diagramas UML para planejamento da estrutura da ap
 
 ---
 
-## Dashboard Administrativo
+## 📊 Dashboard Administrativo
 
 Gerenciamento central das funcionalidades do sistema.
 
-![](docs/images/dashboard.png)
+<p align="center">
+<img src="./img/dashoboard principal.png" width="90%">
+</p>
 
 ---
 
-## Monitoramento de Fauna
+## 🐟 Monitoramento de Fauna
 
 Cadastro e gerenciamento das espécies monitoradas.
 
-![](docs/images/fauna.png)
+<p align="center">
+<img src="./img/admin monito de fauna.png" width="90%">
+</p>
 
 ---
 
-## Sistema de Pesquisas
+## 📝 Sistema de Pesquisas
 
 Gerenciamento de pesquisas e armazenamento estruturado das respostas.
 
-![](docs/images/pesquisa.png)
+<p align="center">
+<img src="./img/admin pesquisa.png" width="90%">
+</p>
 
 ---
 
-## Central de Feedbacks
+## 💬 Central de Feedbacks
 
 Registro, classificação e gerenciamento dos feedbacks enviados pelos usuários.
 
-![](docs/images/feedback.png)
+<p align="center">
+<img src="./img/admi feedback.png" width="90%">
+</p>
 
 ---
 
-## Relatórios
+## 📈 Simulação de Benefícios
 
-Relatórios desenvolvidos para consolidação das informações armazenadas no banco de dados.
+Simulação do Seguro-Defeso e gerenciamento das solicitações.
 
-![](docs/images/relatorio.png)
+<p align="center">
+<img src="./img/admin simulacao.png" width="90%">
+</p>
 
 ---
 
-## Página Inicial
+## 🏠 Página Inicial
 
 Interface pública destinada à divulgação de informações relacionadas ao período de defeso.
 
-![](docs/images/home.png)
+<p align="center">
+<img src="./img/pagian home.png" width="90%">
+</p>
+
+---
+
+## ⚖️ Direitos do Pescador
+
+Página com informações sobre direitos, benefícios e requisitos para acesso ao Seguro-Defeso.
+
+<p align="center">
+<img src="./img/pagian de direito.png" width="90%">
+</p>
+
+---
+
+## 🌱 Educação Ambiental
+
+Conteúdo educativo voltado à preservação ambiental e conscientização sobre o período de defeso.
+
+<p align="center">
+<img src="./img/pagian de educacoa.png" width="90%">
+</p>
 
 ---
 
@@ -224,7 +252,9 @@ O banco foi desenvolvido utilizando modelagem relacional, priorizando organizaç
 
 ## Modelo Entidade-Relacionamento (DER)
 
-![](docs/images/der.png)
+<p align="center">
+<img src="./img/entidade relacionamento.png" width="95%">
+</p>
 
 ---
 
@@ -232,23 +262,9 @@ O banco foi desenvolvido utilizando modelagem relacional, priorizando organizaç
 
 Modelagem da estrutura da aplicação e relacionamento entre as principais classes.
 
-![](docs/images/uml.png)
-
----
-
-# 📂 Estrutura do Projeto
-
-Organização da aplicação em camadas seguindo boas práticas de arquitetura.
-
-![](docs/images/estrutura.png)
-
----
-
-# 🎓 Apresentação
-
-Registro da apresentação oficial do projeto.
-
-![](docs/images/apresentacao.jpg)
+<p align="center">
+<img src="./img/Diagrama de Classes.png" width="95%">
+</p>
 
 ---
 
@@ -268,7 +284,7 @@ spring.datasource.username=
 spring.datasource.password=
 ```
 
-Execute a aplicação.
+Execute a aplicação utilizando sua IDE de preferência ou via Maven.
 
 ---
 
@@ -306,7 +322,7 @@ O principal objetivo deste projeto foi aplicar conhecimentos de desenvolvimento 
 
 Durante o desenvolvimento foram aplicados conceitos relacionados à arquitetura de software, organização de código, segurança, banco de dados relacional, SQL, modelagem, automação de processos e gerenciamento de informações.
 
-Além do desenvolvimento da aplicação, o projeto serviu como ambiente de estudo para aprofundamento em tecnologias utilizadas no desenvolvimento back-end e na área de Banco de Dados, reforçando competências importantes para projetos voltados à Engenharia e Análise de Dados.
+Além do desenvolvimento da aplicação, o projeto serviu como ambiente de estudo para aprofundamento em tecnologias utilizadas no desenvolvimento back-end e na área de Banco de Dados, reforçando competências importantes para projetos voltados à Engenharia de Software, Banco de Dados, Business Intelligence e Engenharia de Dados.
 
 ---
 
@@ -318,6 +334,5 @@ Projeto desenvolvido para fins acadêmicos e de portfólio.
 
 <div align="center">
 
-Desenvolvido com ❤️ utilizando Java, Spring Boot e MySQL.
 
 </div>
