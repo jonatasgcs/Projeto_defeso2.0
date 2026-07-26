@@ -162,7 +162,15 @@ Além disso, foram utilizados diagramas UML para planejamento da estrutura da ap
 
 ---
 
-# 📊 Demonstração
+---
+
+# 📂 Estrutura do Projeto
+
+O projeto foi organizado em camadas seguindo boas práticas de desenvolvimento com **Spring Boot**, utilizando uma arquitetura baseada em **MVC**, promovendo baixo acoplamento e melhor organização do código-fonte.
+
+<p align="center">
+  <img src="./img/estrutura.png" width="90%" alt="Estrutura do Projeto ECOSIS">
+</p>
 
 ---
 
