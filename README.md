@@ -20,19 +20,21 @@ Sistema desenvolvido utilizando **Java**, **Spring Boot** e **MySQL**, com foco 
 
 ---
 
-# 🎥 Demonstração
+# 🎥 Demonstração em Vídeo
+
+Assista à demonstração completa do **ECOSIS** clicando na imagem abaixo.
 
 <p align="center">
-
-<a href="./img/video do projeto.mp4">
-
-<img src="./img/pagian home.png" width="90%" alt="Demonstração do ECOSIS">
-
-</a>
-
+  <a href="./img/video do projeto.mp4">
+    <img src="./img/pagian home.png" width="90%" alt="Demonstração do ECOSIS">
+  </a>
 </p>
 
-> Clique na imagem acima para assistir à demonstração completa do sistema.
+<p align="center">
+  <strong>▶️ Clique na imagem para abrir o vídeo da demonstração.</strong>
+</p>
+
+---
 
 ---
 
